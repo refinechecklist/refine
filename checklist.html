@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REFINE Checklist - Foundation Models in Medical AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background-color: #fdfdfd;
+      line-height: 1.6; /* Improved readability */
+    }
+    h1 {
+      text-align: center;
+      margin-top: 15px; /* Adjusted margin */
+      margin-bottom: 25px; /* Adjusted margin */
+      font-size: 1.8em;
+    }
+    table {
+      margin: 0 auto 20px auto;
+      width: 100%;
+      max-width: 1000px;
+      border-collapse: collapse;
+      table-layout: auto; /* Ensures column widths are respected more strictly */
+      overflow-wrap: break-word; /* Standard property for word wrapping */
+      word-break: break-word; /* Additional property for broader compatibility */
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+      /* overflow-wrap and word-break will be inherited from table,
+         but can be specified here too for explicitness if issues arise. */
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    label {
+      margin-right: 8px;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    input[type="radio"] {
+        margin-right: 4px;
+    }
+    input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    .section-header {
+      background-color: #e8f4ff;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .center-button {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%; /* Table takes full width on mobile */
+        border: none;
+        table-layout: auto; /* On mobile, layout is driven by block display of tds, not fixed columns */
+      }
+      thead {
+        display: none; /* Hide table header on mobile */
+      }
+      tr {
+        display: block; /* Each row becomes a block element */
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow: hidden; /* Ensures border radius is applied correctly */
+      }
+      td {
+        display: block; /* Each cell becomes a block element */
+        padding: 10px;
+        padding-left: 115px; /* Adjusted for label width */
+        position: relative; /* For positioning the :before pseudo-element */
+        border: none; /* Remove individual cell borders */
+        border-bottom: 1px solid #eee; /* Add a separator line between cells */
+        min-height: 44px; /* Ensure touch targets are adequately sized */
+        text-align: left; /* Align text to the left */
+        overflow-wrap: break-word; /* Ensure wrapping in mobile view cells */
+        word-break: break-word;   /* Ensure wrapping in mobile view cells */
+      }
+      td:last-child {
+        border-bottom: none; /* Remove border for the last cell in a row block */
+      }
+      /* Use data-label attribute to create labels for table cells on mobile */
+      td:before {
+        content: attr(data-label); /* Get content from data-label attribute */
+        position: absolute;
+        left: 10px;
+        top: 50%; /* Vertically center label */
+        transform: translateY(-50%); /* Vertically center label */
+        width: 95px; /* Adjusted label width */
+        font-weight: bold;
+        white-space: normal; /* Allow label text to wrap */
+        text-align: left;
+        padding-right: 5px; /* Space between label and content area start */
+      }
+
+      /* Special styling for section header cells on mobile */
+      td.section-header {
+        padding-left: 10px !important; /* Override padding-left for section headers */
+        padding-top: 12px;
+        padding-bottom: 12px;
+        font-size: 1.1em;
+        background-color: #f0f0f0; /* Slightly different background for emphasis */
+        border-bottom: 1px solid #ccc;
+        text-align: center; /* Center section header text on mobile */
+      }
+      /* Hide the :before pseudo-element for section headers */
+      td.section-header:before {
+        display: none !important;
+      }
+
+      /* Adjust radio button group layout for mobile */
+      td[data-label="Response"] .radio-group {
+        justify-content: flex-start; /* Align radio buttons to the start */
+      }
+      td[data-label="Response"] label {
+          margin-bottom: 5px; /* Add some bottom margin if they wrap */
+      }
+
+      input[type="text"] {
+        padding: 10px; /* Increase padding for text inputs on mobile for easier interaction */
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>REFINE Checklist</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:30px">Section</th>
+      <th style="width:250px">Key Reporting Items</th>
+      <th style="width:100px">Response</th>
+      <th style="width:60px">Page / Section</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- SECTION 1: MODEL SPECIFICATION -->
+    <tr><td class="section-header" colspan="4">1. Model Specification</td></tr>
+    <tr>
+      <td data-label="Section">1.1</td>
+      <td data-label="Key Reporting Items">Model name, vendor, version, release and training cutoff date (e.g., GPT-4, Gemini 2.5)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.1" value="no"> No</label>
+            <label><input type="radio" name="q1.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.1" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">1.2</td>
+      <td data-label="Key Reporting Items">Architecture (e.g., transformer, diffusion), pretraining, fine-tuning, or instruction tuning (e.g., MedPaLM, BioGPT)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.2" value="no"> No</label>
+            <label><input type="radio" name="q1.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.2" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">1.3</td>
+      <td data-label="Key Reporting Items">Modality support (e.g., text-only, text+image)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.3" value="no"> No</label>
+            <label><input type="radio" name="q1.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.3" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">1.4</td>
+      <td data-label="Key Reporting Items">Language capabilities (e.g., English-only, multilingual)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.4" value="no"> No</label>
+            <label><input type="radio" name="q1.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.4" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">1.5</td>
+      <td data-label="Key Reporting Items">Model access (e.g., ChatGPT web, Gemini API, local installation) and any limitations</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.5" value="no"> No</label>
+            <label><input type="radio" name="q1.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.5" placeholder="Page/Section"></td>
+    </tr>
+
+    <!-- SECTION 2: PROMPT DESIGN -->
+    <tr><td class="section-header" colspan="4">2. Prompt Design</td></tr>
+    <tr>
+      <td data-label="Section">2.1</td>
+      <td data-label="Key Reporting Items">Purpose/context of use (e.g., radiology report simplification, clinical question answering)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.1" value="no"> No</label>
+            <label><input type="radio" name="q2.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.1" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">2.2</td>
+      <td data-label="Key Reporting Items">Prompt format (e.g., templates with placeholders, open-ended questions), constraints (e.g., word limits, style guides), and length</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.2" value="no"> No</label>
+            <label><input type="radio" name="q2.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.2" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">2.3</td>
+      <td data-label="Key Reporting Items">Multimodal input details (e.g., PNG chest X-ray, PDF discharge summary)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.3" value="no"> No</label>
+            <label><input type="radio" name="q2.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.3" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">2.4</td>
+      <td data-label="Key Reporting Items">Interaction style (e.g., one-turn query, 3-turn chatbot conversation), memory usage</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.4" value="no"> No</label>
+            <label><input type="radio" name="q2.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.4" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">2.5</td>
+      <td data-label="Key Reporting Items">Prompting strategy (e.g., zero-shot with task instruction, few-shot with examples)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.5" value="no"> No</label>
+            <label><input type="radio" name="q2.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.5" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">2.6</td>
+      <td data-label="Key Reporting Items">Prompt engineering history (e.g., version 1: template A; version 2: modified for clarity) and tuning/test data separation</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q2.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.6" value="no"> No</label>
+            <label><input type="radio" name="q2.6" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q2.6" placeholder="Page/Section"></td>
+    </tr>
+
+    <!-- SECTION 3: STOCHASTICITY CONTROL -->
+    <tr><td class="section-header" colspan="4">3. Stochasticity Control</td></tr>
+    <tr>
+      <td data-label="Section">3.1</td>
+      <td data-label="Key Reporting Items">Generation parameters: temperature, top-k, top-p, max token, penalties, seed</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q3.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.1" value="no"> No</label>
+            <label><input type="radio" name="q3.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q3.1" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">3.2</td>
+      <td data-label="Key Reporting Items">Image generation: inference steps, scheduler, resolution, guidance scale</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q3.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.2" value="no"> No</label>
+            <label><input type="radio" name="q3.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q3.2" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">3.3</td>
+      <td data-label="Key Reporting Items">User roles and prompt attempts (e.g., 2 users, 3 prompts per case)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q3.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.3" value="no"> No</label>
+            <label><input type="radio" name="q3.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q3.3" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">3.4</td>
+      <td data-label="Key Reporting Items">Output selection (e.g., expert-reviewed, randomly selected, consensus-based)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q3.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.4" value="no"> No</label>
+            <label><input type="radio" name="q3.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q3.4" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">3.5</td>
+      <td data-label="Key Reporting Items">Reproducibility constraints and uncertainty reporting</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q3.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.5" value="no"> No</label>
+            <label><input type="radio" name="q3.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q3.5" placeholder="Page/Section"></td>
+    </tr>
+
+    <!-- SECTION 4: DATASET INTEGRITY -->
+    <tr><td class="section-header" colspan="4">4. Dataset Integrity</td></tr>
+    <tr>
+      <td data-label="Section">4.1</td>
+      <td data-label="Key Reporting Items">Dataset name, source, and access type</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.1" value="no"> No</label>
+            <label><input type="radio" name="q4.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.1" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.2</td>
+      <td data-label="Key Reporting Items">Ethics and consent statements</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.2" value="no"> No</label>
+            <label><input type="radio" name="q4.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.2" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.3</td>
+      <td data-label="Key Reporting Items">Prior usage and literature citation</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.3" value="no"> No</label>
+            <label><input type="radio" name="q4.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.3" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.4</td>
+      <td data-label="Key Reporting Items">Dataset composition and source heterogeneity</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.4" value="no"> No</label>
+            <label><input type="radio" name="q4.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.4" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.5</td>
+      <td data-label="Key Reporting Items">Preprocessing and alignment</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.5" value="no"> No</label>
+            <label><input type="radio" name="q4.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.5" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.6</td>
+      <td data-label="Key Reporting Items">Missing data handling</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.6" value="no"> No</label>
+            <label><input type="radio" name="q4.6" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.6" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.7</td>
+      <td data-label="Key Reporting Items">Sample characteristics (e.g., age, sex, disease, imaging modality)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.7" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.7" value="no"> No</label>
+            <label><input type="radio" name="q4.7" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.7" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">4.8</td>
+      <td data-label="Key Reporting Items">Evaluation reference standard and annotator qualifications</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.8" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.8" value="no"> No</label>
+            <label><input type="radio" name="q4.8" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.8" placeholder="Page/Section"></td>
+    </tr>
+
+    <!-- SECTION 5: OUTPUT EVALUATION -->
+    <tr><td class="section-header" colspan="4">5. Output Evaluation</td></tr>
+    <tr>
+      <td data-label="Section">5.1</td>
+      <td data-label="Key Reporting Items">Evaluation methods (e.g., Likert scale ratings, automated scoring)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.1" value="no"> No</label>
+            <label><input type="radio" name="q5.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.1" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.2</td>
+      <td data-label="Key Reporting Items">Human rater details (e.g., number, specialty, experience level)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.2" value="no"> No</label>
+            <label><input type="radio" name="q5.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.2" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.3</td>
+      <td data-label="Key Reporting Items">Subgroup-level analysis (e.g., age groups, disease categories)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.3" value="no"> No</label>
+            <label><input type="radio" name="q5.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.3" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.4</td>
+      <td data-label="Key Reporting Items">Performance metrics (e.g., BLEU, F1, AUROC, readability index, hallucination detection)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.4" value="no"> No</label>
+            <label><input type="radio" name="q5.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.4" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.5</td>
+      <td data-label="Key Reporting Items">Prompt revisions and performance effects (e.g., v1 vs. v2 differences)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.5" value="no"> No</label>
+            <label><input type="radio" name="q5.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.5" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.6</td>
+      <td data-label="Key Reporting Items">Version comparisons (e.g., GPT-4 vs. GPT-4o) and temporal performance variation</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.6" value="no"> No</label>
+            <label><input type="radio" name="q5.6" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.6" placeholder="Page/Section"></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="center-button">
+  <button onclick="window.print()">Print to PDF</button>
+</div>
+
+</body>
+</html>
