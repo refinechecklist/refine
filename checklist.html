@@ -208,7 +208,7 @@
     </tr>
     <tr>
       <td data-label="Section">1.3</td>
-      <td data-label="Key Reporting Items">Modality support details (e.g., text-only, text+image) with fusion strategies (e.g., early, intermediate, late)</td>
+      <td data-label="Key Reporting Items">Modality support details (e.g., text-only, text+image), with fusion strategies (e.g., early, intermediate, late)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q1.3" value="yes"> Yes</label>
@@ -232,7 +232,7 @@
     </tr>
     <tr>
       <td data-label="Section">1.5</td>
-      <td data-label="Key Reporting Items">Model access (e.g., ChatGPT web, Gemini API, local installation) and any limitations</td>
+      <td data-label="Key Reporting Items">Model access (e.g., ChatGPT web, Gemini API, local installation)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q1.5" value="yes"> Yes</label>
@@ -244,7 +244,7 @@
     </tr>
     <tr>
       <td data-label="Section">1.6</td>
-      <td data-label="Key Reporting Items">Known limitations, intended scope of use, explicit non-use cases, and consideration of potential misuse</td>
+      <td data-label="Key Reporting Items">Intended clinical application/scope of use (e.g., diagnostic support, clinical question answering, workflow improvement)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q1.6" value="yes"> Yes</label>
@@ -256,7 +256,7 @@
     </tr>
     <tr>
       <td data-label="Section">1.7</td>
-      <td data-label="Key Reporting Items">Computational resources for training/fine-tuning (if applicable and significant)</td>
+      <td data-label="Key Reporting Items">Model limitations, explicit clinical non-use cases, and consideration of potential misuse (with attention to patient harm or health system risk)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q1.7" value="yes"> Yes</label>
@@ -266,12 +266,24 @@
       </td>
       <td data-label="Page / Section Ref."><input type="text" name="page_q1.7" placeholder="Page/Section"></td>
     </tr>
+    <tr>
+      <td data-label="Section">1.8</td>
+      <td data-label="Key Reporting Items">Computational resources for training/fine-tuning and deployment (if applicable)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q1.8" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.8" value="no"> No</label>
+            <label><input type="radio" name="q1.8" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q1.8" placeholder="Page/Section"></td>
+    </tr>
 
     <!-- SECTION 2: PROMPT DESIGN -->
     <tr><td class="section-header" colspan="4">2. Prompt Design</td></tr>
     <tr>
       <td data-label="Section">2.1</td>
-      <td data-label="Key Reporting Items">Purpose/context of use (e.g., radiology report simplification, clinical question answering)</td>
+      <td data-label="Key Reporting Items">Prompt format (e.g., templates with placeholders, open-ended questions), constraints (e.g., word limits, style guides), and length</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.1" value="yes"> Yes</label>
@@ -283,7 +295,7 @@
     </tr>
     <tr>
       <td data-label="Section">2.2</td>
-      <td data-label="Key Reporting Items">Prompt format (e.g., templates with placeholders, open-ended questions), constraints (e.g., word limits, style guides), and length</td>
+      <td data-label="Key Reporting Items">Input details (e.g., chest X-ray, discharge summary) along with characteristics (e.g., file format (PNG, PDF), resolution)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.2" value="yes"> Yes</label>
@@ -295,7 +307,7 @@
     </tr>
     <tr>
       <td data-label="Section">2.3</td>
-      <td data-label="Key Reporting Items">Multimodal input (e.g., PNG chest X-ray, PDF discharge summary, file format, resolution) and  preprocessing details (e.g., OCR)</td>
+      <td data-label="Key Reporting Items">Interaction style (e.g., one-turn query, 3-turn chatbot conversation) and memory usage</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.3" value="yes"> Yes</label>
@@ -307,7 +319,7 @@
     </tr>
     <tr>
       <td data-label="Section">2.4</td>
-      <td data-label="Key Reporting Items">Interaction style (e.g., one-turn query, 3-turn chatbot conversation), memory usage</td>
+      <td data-label="Key Reporting Items">Prompting strategy (e.g., zero-shot with task instruction, few-shot with examples)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.4" value="yes"> Yes</label>
@@ -319,7 +331,7 @@
     </tr>
     <tr>
       <td data-label="Section">2.5</td>
-      <td data-label="Key Reporting Items">Prompting strategy (e.g., zero-shot with task instruction, few-shot with examples)</td>
+      <td data-label="Key Reporting Items">Prompt engineering history (e.g., version 1: template A; version 2: modified for clarity)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.5" value="yes"> Yes</label>
@@ -331,7 +343,7 @@
     </tr>
     <tr>
       <td data-label="Section">2.6</td>
-      <td data-label="Key Reporting Items">Prompt engineering history (e.g., version 1: template A; version 2: modified for clarity) and tuning/test data separation</td>
+      <td data-label="Key Reporting Items">Integration of relevant patient clinical context (e.g., age, sex, key comorbidities, relevant medical history) into prompts, how this contextual information was selected, standardized, and its source</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q2.6" value="yes"> Yes</label>
@@ -346,7 +358,7 @@
     <tr><td class="section-header" colspan="4">3. Stochasticity Control</td></tr>
     <tr>
       <td data-label="Section">3.1</td>
-      <td data-label="Key Reporting Items">Generation parameters: temperature (e.g., 0.7), top-k (e.g., 40), top-p (e.g., 0.9), max token (e.g., 2048), penalties, seed</td>
+      <td data-label="Key Reporting Items">Generation parameters: e.g., temperature (e.g., 0.7), top-k (e.g., 40), top-p (e.g., 0.9), max token (e.g., 2048), penalties, seed</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q3.1" value="yes"> Yes</label>
@@ -358,7 +370,7 @@
     </tr>
     <tr>
       <td data-label="Section">3.2</td>
-      <td data-label="Key Reporting Items">Image generation: inference steps (e.g., 50), scheduler (e.g., DDIM), resolution (e.g., 512×512), guidance scale</td>
+      <td data-label="Key Reporting Items">Image generation (if applicable): e.g., inference steps (e.g., 50), scheduler (e.g., DDIM), resolution (e.g., 512×512), guidance scale</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q3.2" value="yes"> Yes</label>
@@ -409,7 +421,7 @@
     <tr><td class="section-header" colspan="4">4. Dataset Integrity</td></tr>
     <tr>
       <td data-label="Section">4.1</td>
-      <td data-label="Key Reporting Items">Dataset name, source (e.g., internal records),  access type (e.g., public, restrictive, private), and license details for publicly available datasets, if applicable</td>
+      <td data-label="Key Reporting Items">Dataset name, specific clinical sources (e.g., department electronic health records, clinical trial data), access type (e.g., public, restrictive, private), and license details for publicly available datasets, if applicable</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q4.1" value="yes"> Yes</label>
@@ -457,7 +469,7 @@
     </tr>
     <tr>
       <td data-label="Section">4.5</td>
-      <td data-label="Key Reporting Items">Preprocessing and alignment details (e.g., text de-identification, image pairing)</td>
+      <td data-label="Key Reporting Items">Preprocessing and alignment details at dataset level (e.g., text de-identification/anonymisation, image pairing)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q4.5" value="yes"> Yes</label>
@@ -481,7 +493,7 @@
     </tr>
     <tr>
       <td data-label="Section">4.7</td>
-      <td data-label="Key Reporting Items">Sample characteristics (e.g., age, sex, disease, imaging modality) and analysis of potential data representational biases</td>
+      <td data-label="Key Reporting Items">Sample characteristics (e.g., age, sex, disease, imaging modality) and analysis of potential input-level data representational biases</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q4.7" value="yes"> Yes</label>
@@ -503,6 +515,18 @@
       </td>
       <td data-label="Page / Section Ref."><input type="text" name="page_q4.8" placeholder="Page/Section"></td>
     </tr>
+    <tr>
+      <td data-label="Section">4.9</td>
+      <td data-label="Key Reporting Items">Clear separation of tuning/test data</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.9" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.9" value="no"> No</label>
+            <label><input type="radio" name="q4.9" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q4.9" placeholder="Page/Section"></td>
+    </tr>
 
     <!-- SECTION 5: OUTPUT EVALUATION -->
     <tr><td class="section-header" colspan="4">5. Output Evaluation</td></tr>
@@ -520,7 +544,7 @@
     </tr>
     <tr>
       <td data-label="Section">5.2</td>
-      <td data-label="Key Reporting Items">Human rater details (e.g., number, specialty, experience level)</td>
+      <td data-label="Key Reporting Items">Human rater (e.g., number, specialty, experience level) and reliability analysis details</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q5.2" value="yes"> Yes</label>
@@ -544,7 +568,7 @@
     </tr>
     <tr>
       <td data-label="Section">5.4</td>
-      <td data-label="Key Reporting Items">Performance metrics (e.g., BLEU, ROUGE, F1, AUROC, readability index, hallucination, and safety/harmfulness detection)</td>
+      <td data-label="Key Reporting Items">Performance metrics (e.g., BLEU, ROUGE, F1, AUROC, readability index, hallucination)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q5.4" value="yes"> Yes</label>
@@ -556,7 +580,7 @@
     </tr>
     <tr>
       <td data-label="Section">5.5</td>
-      <td data-label="Key Reporting Items">Prompt revisions and performance effects (e.g., v1 vs. v2 differences)</td>
+      <td data-label="Key Reporting Items">Performance effects of prompt revisions (e.g., v1 vs. v2 differences)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q5.5" value="yes"> Yes</label>
@@ -580,7 +604,7 @@
     </tr>
     <tr>
       <td data-label="Section">5.7</td>
-      <td data-label="Key Reporting Items">Assessment of model output bias and fairness across relevant groups (e.g., fairness metrics, qualitative review)</td>
+      <td data-label="Key Reporting Items">Assessment of model output bias and fairness across clinically relevant groups (e.g., fairness metrics, qualitative review)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q5.7" value="yes"> Yes</label>
@@ -616,7 +640,7 @@
     </tr>
     <tr>
       <td data-label="Section">5.10</td>
-      <td data-label="Key Reporting Items">Comparison of non-FM baselines or existing clinical standards (if applicable; e.g., expert human performance, established guidelines)</td>
+      <td data-label="Key Reporting Items">Comparison of clinically relevant non-FM baselines or existing clinical standards (if applicable; e.g., expert human performance, established guidelines)</td>
       <td data-label="Response">
         <div class="radio-group">
             <label><input type="radio" name="q5.10" value="yes"> Yes</label>
@@ -625,6 +649,18 @@
         </div>
       </td>
       <td data-label="Page / Section Ref."><input type="text" name="page_q5.10" placeholder="Page/Section"></td>
+    </tr>
+    <tr>
+      <td data-label="Section">5.11</td>
+      <td data-label="Key Reporting Items">Assessment of potential clinical utility or added value (e.g., diagnostic accuracy improvement, time-saving for clinicians, improved patient understanding)</td>
+      <td data-label="Response">
+        <div class="radio-group">
+            <label><input type="radio" name="q5.11" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.11" value="no"> No</label>
+            <label><input type="radio" name="q5.11" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Page / Section Ref."><input type="text" name="page_q5.11" placeholder="Page/Section"></td>
     </tr>
   </tbody>
 </table>
