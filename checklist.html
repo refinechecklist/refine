@@ -124,6 +124,18 @@
         font-weight: bold;
         display: inline-block;
     }
+    .tooltip-icon2 {
+        background-color: #FFA500;
+        color: white;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+    }
     .tooltip-text {
         visibility: hidden;
         width: 400px; 
@@ -394,7 +406,12 @@
   <thead>
     <tr>
       <th class="col-sec">No</th>
-      <th class="col-item">Item</th>
+      <th class="col-item">Item
+        <div class="tooltip">
+            <span class="tooltip-icon2">i</span>
+            <span class="tooltip-text">Definitions of technical terms are provided in the standardized terminology table in the main manuscript.</span>
+        </div>
+    </th>
       <th class="col-reported">Reported</th>
       <th class="col-loc">Location<br><span style="font-weight:normal; font-size:0.8em">(if Yes/Partial)</span></th>
     </tr>
