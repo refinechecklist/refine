@@ -111,6 +111,7 @@
         margin-left: 8px;
         cursor: help;
         vertical-align: middle;
+        top: calc(100% + 6px);
     }
     .tooltip-icon {
         background-color: #17a2b8;
@@ -412,7 +413,19 @@
             <span class="tooltip-text">Definitions of technical terms are provided in the standardized terminology table in the main manuscript.</span>
         </div>
     </th>
-      <th class="col-reported">Reported</th>
+      <th class="col-reported">Reported
+        <div class="tooltip">
+            <span class="tooltip-icon2">i</span>
+            <span class="tooltip-text">
+              <ul style="margin: 0; padding-left: 1.2em;">
+                <li>Yes: fully reported</li>
+                <li>Partial: partly reported</li>
+                <li>No: not reported</li>
+                <li>N/A: not applicable</li>
+              </ul>
+            </span>
+        </div>
+        </th>
       <th class="col-loc">Location<br><span style="font-weight:normal; font-size:0.8em">(if Yes/Partial)</span></th>
     </tr>
   </thead>
@@ -1329,9 +1342,7 @@
     </div>
 </div>
 
-<div class="citation-note">
-    <p><strong>Note:</strong> Please cite the following article when using this checklist: <em>[Citation Details]</em></p>
-</div>
+
 
 <div class="action-buttons">
   <button class="btn-print" onclick="window.print()">Print to PDF</button>
@@ -1339,6 +1350,11 @@
   <button class="btn-download-img" onclick="downloadSummaryImage()">Download Summary Image</button>
 </div>
 
+<div class="citation-note">
+    <p><strong>Note:</strong> Please cite the following article when using this checklist: <em>[Citation Details]</em></p>
+</div>
+    
+    
 <script>
     // --- CHART FUNCTIONS ---
     function createSegment(pct, type, label) {
