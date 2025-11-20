@@ -4,165 +4,385 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REFINE Checklist - Foundation Models in Medical AI</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 10px;
       background-color: #fdfdfd;
-      line-height: 1.6; /* Improved readability */
+      line-height: 1.6;
+      color: #333;
     }
     h1 {
       text-align: center;
-      margin-top: 15px; /* Adjusted margin */
-      margin-bottom: 25px; /* Adjusted margin */
+      margin-top: 15px;
+      margin-bottom: 25px;
       font-size: 1.8em;
     }
+    /* Summary Title styling */
+    #summary-content h2 {
+      text-align: center;
+      margin-top: 10px; 
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      color: #333;
+    }
+    
+    /* --- MAIN CHECKLIST TABLE --- */
     table {
       margin: 0 auto 20px auto;
       width: 100%;
       max-width: 1000px;
       border-collapse: collapse;
-      table-layout: auto; /* Ensures column widths are respected more strictly */
-      overflow-wrap: break-word; /* Standard property for word wrapping */
-      word-break: break-word; /* Additional property for broader compatibility */
+      table-layout: fixed; 
     }
     th, td {
       border: 1px solid #ccc;
       padding: 10px;
-      vertical-align: top;
+      vertical-align: middle;
       text-align: left;
-      /* overflow-wrap and word-break will be inherited from table,
-         but can be specified here too for explicitness if issues arise. */
+      font-size: 0.95em;
     }
     th {
-      background-color: #f2f2f2;
-      font-weight: bold;
+      background-color: #f8f9fa;
+      font-weight: 600;
+      text-align: center;
+      color: #495057;
     }
-    label {
-      margin-right: 8px;
-      display: inline-flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    input[type="radio"] {
-        margin-right: 4px;
-    }
-    input[type="text"] {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        width: 100%;
-    }
+    
+    .col-sec { width: 5%; }
+    .col-item { width: 50%; } 
+    .col-reported { width: 25%; } 
+    .col-loc { width: 13%; }
+
     .section-header {
       background-color: #e8f4ff;
       font-weight: bold;
       font-size: 1.1em;
+      text-align: left;
+      color: #0056b3;
     }
-    .center-button {
-      text-align: center;
-      margin-top: 30px;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
+
+    /* --- FORM ELEMENTS --- */
+    label {
+      margin-right: 0; 
+      display: inline-flex;
+      align-items: center;
       cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
+      font-size: 0.9em; 
+      white-space: nowrap;
+      color: #495057;
     }
-    button:hover {
-        background-color: #0056b3;
+    input[type="radio"] {
+        margin-right: 4px;
+        accent-color: #007bff;
+    }
+    input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 0.9em;
+    }
+    input[type="text"]:focus {
+        outline: none;
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
 
     .radio-group {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
+        flex-direction: row; 
+        justify-content: flex-start;
+        gap: 12px; 
+        align-items: center;
+        flex-wrap: wrap; 
+    }
+
+    /* --- TOOLTIP STYLES --- */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        margin-left: 8px;
+        cursor: help;
+        vertical-align: middle;
+    }
+    .tooltip-icon {
+        background-color: #17a2b8;
+        color: white;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+    }
+    .tooltip-text {
+        visibility: hidden;
+        width: 400px; 
+        background-color: #343a40;
+        color: #fff;
+        text-align: left;
+        border-radius: 6px;
+        padding: 12px;
+        position: absolute;
+        z-index: 1000; 
+        bottom: 140%; 
+        left: 50%;
+        margin-left: -200px; 
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        font-weight: normal;
+        font-size: 0.85em;
+        line-height: 1.5;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #343a40 transparent transparent transparent;
+    }
+    .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* --- STACKED BAR CHART STYLES --- */
+    #summary-content {
+        max-width: 980px;
+        margin: 20px auto 20px auto;
+        padding: 10px;
+        background: #fff; 
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .chart-container {
+        width: 100%;
+    }
+
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        font-size: 0.9em;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+    .legend-color {
+        width: 15px;
+        height: 15px;
+        margin-right: 6px;
+        border-radius: 3px;
+    }
+
+    .chart-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .chart-label {
+        width: 25%;
+        font-weight: 600;
+        font-size: 0.95em;
+        padding-right: 15px;
+        text-align: right;
+        color: #555;
+    }
+    .chart-bar-wrapper {
+        width: 75%;
+        height: 30px;
+        background-color: #f1f3f5;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+    }
+    
+    .bar-segment {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 0.8em;
+        font-weight: bold;
+        transition: width 0.5s ease; 
+        white-space: nowrap;
+        overflow: hidden;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .bg-yes { background-color: #4caf50; }      
+    .bg-partial { background-color: #ff9800; }  
+    .bg-no { background-color: #f44336; }       
+    .bg-na { background-color: #9e9e9e; }       
+    .bg-empty { background-color: #e0e0e0; color: #888; } 
+
+    .bar-segment.small-segment { color: transparent; }
+
+    .chart-row.overall-row {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 2px dashed #dee2e6;
+    }
+    .overall-row .chart-label {
+        font-size: 1.1em;
+        color: #333;
+    }
+    .overall-row .chart-bar-wrapper {
+        height: 40px; 
+    }
+
+    /* --- CITATION BOX --- */
+    .citation-note {
+        width: 100%;
+        max-width: 1000px;         
+        margin: 30px auto;         
+        padding: 15px;
+        background-color: #fff8e1;
+        border: 1px solid #ffe0b2;
+        border-left: 5px solid #ffb74d; 
+        border-radius: 4px;
+        font-size: 0.95em;
+        color: #5d4037;
+        box-sizing: border-box;    
+    }
+
+    /* --- ACTION BUTTONS --- */
+    .action-buttons {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:active {
+        transform: scale(0.98);
+    }
+    .btn-print {
+        background-color: #007bff; /* Blue */
+    }
+    .btn-print:hover {
+        background-color: #0056b3;
+    }
+    .btn-download-img {
+        background-color: #17a2b8; /* Teal */
+    }
+    .btn-download-img:hover {
+        background-color: #138496;
+    }
+    .btn-excel {
+        background-color: #28a745; /* Excel Green */
+    }
+    .btn-excel:hover {
+        background-color: #218838;
+    }
+
+    /* --- PRINT STYLES --- */
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-color: white;
+      }
+      .action-buttons, button {
+        display: none !important;
+      }
+      .tooltip-icon, .tooltip-text {
+        display: none !important;
+      }
+      .section-header {
+        background-color: #e8f4ff !important;
+      }
+      th {
+        background-color: #f8f9fa !important;
+      }
+      .bg-yes { background-color: #4caf50 !important; }      
+      .bg-partial { background-color: #ff9800 !important; }  
+      .bg-no { background-color: #f44336 !important; }       
+      .bg-na { background-color: #9e9e9e !important; }       
+      .bg-empty { background-color: #e0e0e0 !important; }
     }
 
     /* Responsive Design */
-    @media screen and (max-width: 768px) {
-      body {
-        padding: 5px;
+    @media screen and (max-width: 850px) {
+      body { padding: 5px; }
+      h1 { font-size: 1.5em; margin-bottom: 20px; }
+      table { width: 100%; border: none; table-layout: auto; }
+      thead { display: none; }
+      tr { display: block; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+      td { 
+        display: block; 
+        padding: 10px; 
+        padding-left: 120px; 
+        position: relative; 
+        border: none; 
+        border-bottom: 1px solid #eee; 
+        text-align: left;
       }
-      h1 {
-        font-size: 1.5em;
-        margin-bottom: 20px;
-      }
-      table {
-        width: 100%; /* Table takes full width on mobile */
-        border: none;
-        table-layout: auto; /* On mobile, layout is driven by block display of tds, not fixed columns */
-      }
-      thead {
-        display: none; /* Hide table header on mobile */
-      }
-      tr {
-        display: block; /* Each row becomes a block element */
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        overflow: hidden; /* Ensures border radius is applied correctly */
-      }
-      td {
-        display: block; /* Each cell becomes a block element */
-        padding: 10px;
-        padding-left: 115px; /* Adjusted for label width */
-        position: relative; /* For positioning the :before pseudo-element */
-        border: none; /* Remove individual cell borders */
-        border-bottom: 1px solid #eee; /* Add a separator line between cells */
-        min-height: 44px; /* Ensure touch targets are adequately sized */
-        text-align: left; /* Align text to the left */
-        overflow-wrap: break-word; /* Ensure wrapping in mobile view cells */
-        word-break: break-word;   /* Ensure wrapping in mobile view cells */
-      }
-      td:last-child {
-        border-bottom: none; /* Remove border for the last cell in a row block */
-      }
-      /* Use data-label attribute to create labels for table cells on mobile */
+      td:last-child { border-bottom: none; }
+      
       td:before {
-        content: attr(data-label); /* Get content from data-label attribute */
+        content: attr(data-label); 
         position: absolute;
         left: 10px;
-        top: 50%; /* Vertically center label */
-        transform: translateY(-50%); /* Vertically center label */
-        width: 95px; /* Adjusted label width */
+        top: 10px;
+        width: 100px; 
         font-weight: bold;
-        white-space: normal; /* Allow label text to wrap */
-        text-align: left;
-        padding-right: 5px; /* Space between label and content area start */
+        color: #555;
+        font-size: 0.85em;
       }
 
-      /* Special styling for section header cells on mobile */
       td.section-header {
-        padding-left: 10px !important; /* Override padding-left for section headers */
-        padding-top: 12px;
-        padding-bottom: 12px;
-        font-size: 1.1em;
-        background-color: #f0f0f0; /* Slightly different background for emphasis */
-        border-bottom: 1px solid #ccc;
-        text-align: center; /* Center section header text on mobile */
+        padding-left: 10px !important;
+        text-align: center; 
+        background-color: #f0f0f0;
       }
-      /* Hide the :before pseudo-element for section headers */
-      td.section-header:before {
-        display: none !important;
-      }
+      td.section-header:before { display: none !important; }
 
-      /* Adjust radio button group layout for mobile */
-      td[data-label="Response"] .radio-group {
-        justify-content: flex-start; /* Align radio buttons to the start */
+      input[type="text"] { padding: 10px; }
+      
+      .tooltip-text {
+        width: 240px;
+        margin-left: -200px; 
       }
-      td[data-label="Response"] label {
-          margin-bottom: 5px; /* Add some bottom margin if they wrap */
-      }
-
-      input[type="text"] {
-        padding: 10px; /* Increase padding for text inputs on mobile for easier interaction */
-      }
+      
+      .chart-row { flex-direction: column; align-items: flex-start; }
+      .chart-label { width: 100%; text-align: left; margin-bottom: 5px; }
+      .chart-bar-wrapper { width: 100%; }
+      .chart-legend { flex-wrap: wrap; gap: 10px; }
     }
   </style>
 </head>
@@ -170,504 +390,1129 @@
 
 <h1>REFINE Checklist</h1>
 
-<table>
+<table id="main-checklist">
   <thead>
     <tr>
-      <th style="width:30px">Section</th>
-      <th style="width:250px">Key Reporting Items</th>
-      <th style="width:100px">Response</th>
-      <th style="width:60px">Page / Section</th>
+      <th class="col-sec">No</th>
+      <th class="col-item">Item</th>
+      <th class="col-reported">Reported</th>
+      <th class="col-loc">Location<br><span style="font-weight:normal; font-size:0.8em">(if Yes/Partial)</span></th>
     </tr>
   </thead>
   <tbody>
-    <!-- SECTION 1: MODEL SPECIFICATION -->
     <tr><td class="section-header" colspan="4">1. Model Specification</td></tr>
+    
     <tr>
       <td data-label="Section">1.1</td>
-      <td data-label="Key Reporting Items">Model name, vendor, version, release, and training cutoff date (e.g., GPT-4, Gemini 2.5)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Model name, vendor/developer, version/identifier, release date, and training/knowledge cutoff date
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the full model identity. Specify the model name (e.g., GPT-5), vendor or developer (e.g., OpenAI or Stanford University), version or API identifier (e.g., 5 or gpt-5-2025-08-07), and model release date. Also, report the training or knowledge cutoff date, which defines the latest point up to which the model was trained.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.1" value="partial"> Partial</label>
             <label><input type="radio" name="q1.1" value="no"> No</label>
             <label><input type="radio" name="q1.1" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.1" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.1" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.2</td>
-      <td data-label="Key Reporting Items">Architecture (e.g., transformer, diffusion), pretraining, fine-tuning, or instruction tuning details</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Model architecture and key characteristics
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the model’s foundational architecture (e.g., transformer, state-space models) and any key design features (e.g., mixture-of-experts, diffusion-based models). Include parameter count if available.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.2" value="partial"> Partial</label>
             <label><input type="radio" name="q1.2" value="no"> No</label>
             <label><input type="radio" name="q1.2" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.2" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.2" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.3</td>
-      <td data-label="Key Reporting Items">Modality support details (e.g., text-only, text+image), with fusion strategies (e.g., early, intermediate, late)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Model pretraining, posttraining, and inference-time adaptation strategy
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe how the model was developed or adapted for the study task. Indicate whether the study involved training a new foundation model (pretraining from scratch or continued pretraining) or posttraining an existing one. For training, summarize the pretraining corpus and objectives. For posttraining, specify whether it involved tuning or alignment, and whether model weights were updated. If weights were updated, state the method (e.g., supervised fine-tuning, reinforcement learning) and the technique (e.g., full fine-tuning, parameter-efficient fine-tuning), including key details such as dataset size, steps/epochs, batch size, and optimizer. If no weight updates were performed, describe the inference-time adaptation strategy (e.g., prompting, retrieval-augmented generation) and report any external tools or APIs used at inference. Indicate whether clinical data were included, and clearly specify the stage(s) at which they were used (pretraining, posttraining, or inference-time adaptation).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.3" value="partial"> Partial</label>
             <label><input type="radio" name="q1.3" value="no"> No</label>
             <label><input type="radio" name="q1.3" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.3" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.3" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.4</td>
-      <td data-label="Key Reporting Items">Language capabilities (e.g., English-only, multilingual)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Modality support details (input and output) and limitations
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the input and output modalities supported by the model (e.g., text, image, audio, video). Describe any technical limitations, such as maximum context length (e.g., up to 128k tokens), image resolution constraints (e.g., ≤1024×1024 pixels), or input-pipeline restrictions (e.g.,  DICOM files require prior conversion to image tensors; only 2D images accepted).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.4" value="partial"> Partial</label>
             <label><input type="radio" name="q1.4" value="no"> No</label>
             <label><input type="radio" name="q1.4" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.4" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.4" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.5</td>
-      <td data-label="Key Reporting Items">Model access (e.g., ChatGPT web, Gemini API, local installation)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Language capabilities
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the languages in which the model has been evaluated or explicitly tested, and specify any known limitations or domain specialization (e.g., medical English, radiology-specific Turkish, German for lay explanations). If applicable, indicate whether performance across languages was assessed or remains unverified.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.5" value="partial"> Partial</label>
             <label><input type="radio" name="q1.5" value="no"> No</label>
             <label><input type="radio" name="q1.5" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.5" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.5" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.6</td>
-      <td data-label="Key Reporting Items">Intended clinical application/scope of use (e.g., diagnostic support, clinical question answering, workflow improvement)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Model access
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe how the model was accessed during the study. Specify whether access was through a graphical user interface (GUI) (e.g., chat platform) or an application programming interface (API). For API access, indicate whether it was locally hosted, securely hosted (e.g., an enterprise cloud), or publicly hosted.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.6" value="partial"> Partial</label>
             <label><input type="radio" name="q1.6" value="no"> No</label>
             <label><input type="radio" name="q1.6" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.6" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.6" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.7</td>
-      <td data-label="Key Reporting Items">Model limitations, explicit clinical non-use cases, and consideration of potential misuse (with attention to patient harm or health system risk)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Sharing of code, data, and model artifacts
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">State the availability of study materials that support reproducibility, including code repositories (e.g., GitHub),  any artifacts such as processed datasets, model weights, or checkpoints (e.g., Hugging Face), and study datasets (e.g., Kaggle, Zenodo, Hugging Face).  Provide access links where applicable. If any component is not publicly available, include a clear statement of unavailability and the reason (e.g., provider restrictions, licensing limitations, institutional policy).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.7" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.7" value="partial"> Partial</label>
             <label><input type="radio" name="q1.7" value="no"> No</label>
             <label><input type="radio" name="q1.7" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.7" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.7" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">1.8</td>
-      <td data-label="Key Reporting Items">Computational resources for training/fine-tuning and deployment (if applicable)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Computational requirements
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the computational resources required for model development and use. Specify hardware and resource needs for different levels, including training, fine-tuning, alignment, and inference (e.g., GPU/TPU type, number of compute nodes, memory requirements, runtime, or cloud compute specifications).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q1.8" value="yes"> Yes</label>
+            <label><input type="radio" name="q1.8" value="partial"> Partial</label>
             <label><input type="radio" name="q1.8" value="no"> No</label>
             <label><input type="radio" name="q1.8" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q1.8" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q1.8" placeholder="Page/Section"></td>
     </tr>
 
-    <!-- SECTION 2: PROMPT DESIGN -->
     <tr><td class="section-header" colspan="4">2. Prompt Design</td></tr>
+    
     <tr>
       <td data-label="Section">2.1</td>
-      <td data-label="Key Reporting Items">Prompt format (e.g., templates with placeholders, open-ended questions), constraints (e.g., word limits, style guides), and length</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Prompt engineering protocol with versioning
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the protocol used for prompt engineering and the development process (e.g., iterative testing of prompt variants with predefined success metrics, human-in-the-loop review with inter-rater checks, automated prompt optimization [e.g., DSPy]). Describe contributors involved (e.g., domain experts, engineers), data partitioning used during prompt development, and any automated tools or optimization frameworks applied. Provide a version history of prompts, summarizing major changes across iterations.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.1" value="partial"> Partial</label>
             <label><input type="radio" name="q2.1" value="no"> No</label>
             <label><input type="radio" name="q2.1" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.1" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.1" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">2.2</td>
-      <td data-label="Key Reporting Items">Input details (e.g., chest X-ray, discharge summary) along with characteristics (e.g., file format (PNG, PDF), resolution)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Prompting strategy, prompt format, and length
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe how prompts were constructed and used. Specify the prompting strategy (e.g., zero-shot with task instructions, few-shot using exemplar inputs, or chain-of-thought prompting), the prompt format (e.g., structured templates with placeholders or open-ended queries for text prompts; a single image, a multi-image set, or region annotations/bounding boxes for image prompts), and prompt length (e.g., short directive prompts vs. long multi-context prompts).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.2" value="partial"> Partial</label>
             <label><input type="radio" name="q2.2" value="no"> No</label>
             <label><input type="radio" name="q2.2" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.2" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.2" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">2.3</td>
-      <td data-label="Key Reporting Items">Interaction style (e.g., one-turn query, 3-turn chatbot conversation) and memory usage</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Prompt modality, language, technical input specification, and full prompt content
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Specify the prompt modality (e.g., text, image, audio), type of input(s) (e.g., chest X-ray images, discharge summary text, pathology reports), and the language (if text prompts are used or images contain text). Include relevant technical characteristics such as resolution, encoding, or pre-processing applied before input conversion. Provide the full prompt content used in the study (e.g., verbatim text for text prompts or representative examples for non-text prompts).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.3" value="partial"> Partial</label>
             <label><input type="radio" name="q2.3" value="no"> No</label>
             <label><input type="radio" name="q2.3" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.3" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.3" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">2.4</td>
-      <td data-label="Key Reporting Items">Prompting strategy (e.g., zero-shot with task instruction, few-shot with examples)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Integration of relevant patient clinical context
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe how patient-specific clinical information was incorporated into prompts. Specify what types of context were included (e.g., age, sex, key comorbidities, prior treatments, relevant medical history), how this information was selected (e.g., based on predefined criteria, guideline-driven relevance, or expert curation), and how it was standardized (e.g., ICD codes for diagnoses, SNOMED CT for procedures, RxNorm for medications, and BI-/LI-/PI-RADS for imaging). Also state the source of the clinical information (e.g., electronic health records, radiology reports, patient summaries).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.4" value="partial"> Partial</label>
             <label><input type="radio" name="q2.4" value="no"> No</label>
             <label><input type="radio" name="q2.4" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.4" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.4" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">2.5</td>
-      <td data-label="Key Reporting Items">Prompt engineering history (e.g., version 1: template A; version 2: modified for clarity)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Interaction style and session memory policy
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Specify how users interacted with the model. Indicate whether the workflow used a single-turn interaction (independent one-shot queries) or a multi-turn conversation where previous messages influence later responses. Also report the memory policy, whether prior context was retained across messages in the same conversation and reset after closing the session (i.e., session memory policy), or whether prior context is retained across different conversations (i.e., persistent memory policy), to clarify how much conversational history shaped the model’s outputs.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.5" value="partial"> Partial</label>
             <label><input type="radio" name="q2.5" value="no"> No</label>
             <label><input type="radio" name="q2.5" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.5" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.5" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">2.6</td>
-      <td data-label="Key Reporting Items">Integration of relevant patient clinical context (e.g., age, sex, key comorbidities, relevant medical history) into prompts, how this contextual information was selected, standardized, and its source</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Output handling
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report how model outputs were controlled and managed after generation. Describe the output format used (e.g., structured JSON, free-text, tabular form). Specify the level of control applied: i, no control; ii, control in prompt only; iii, control during generation (e.g., guided generation or JSON mode with schema validation); or iv, control after generation (e.g., checking for information completeness, validating against a ground truth, or validating against a schema). Describe how constraints or output schemas were enforced and any further validation schemas applied (e.g., clinical plausibility review).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q2.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q2.6" value="partial"> Partial</label>
             <label><input type="radio" name="q2.6" value="no"> No</label>
             <label><input type="radio" name="q2.6" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q2.6" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q2.6" placeholder="Page/Section"></td>
     </tr>
 
-    <!-- SECTION 3: STOCHASTICITY CONTROL -->
     <tr><td class="section-header" colspan="4">3. Stochasticity Control</td></tr>
+    
     <tr>
       <td data-label="Section">3.1</td>
-      <td data-label="Key Reporting Items">Generation parameters: e.g., temperature (e.g., 0.7), top-k (e.g., 40), top-p (e.g., 0.9), max token (e.g., 2048), penalties, seed</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Generation parameters
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report all model generation settings used during output generation for all modalities (text, image, and others). For text generation, specify parameters such as temperature, top-k/top-p sampling, maximum output tokens, repetition or frequency penalties, and any random seed used. For image generation, include the number of inference steps, scheduler type, output resolution, and guidance scale.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q3.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.1" value="partial"> Partial</label>
             <label><input type="radio" name="q3.1" value="no"> No</label>
             <label><input type="radio" name="q3.1" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q3.1" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q3.1" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">3.2</td>
-      <td data-label="Key Reporting Items">Image generation (if applicable): e.g., inference steps (e.g., 50), scheduler (e.g., DDIM), resolution (e.g., 512×512), guidance scale</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Prompt operator characteristics and number of prompt attempts
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Specify who interacted with the model. Report these operators’ roles (e.g., clinician, researcher, attending radiologist, resident, technologist) and experience levels (e.g., years of practice, AI familiarity, training status). Also specify how many prompt attempts were made.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q3.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.2" value="partial"> Partial</label>
             <label><input type="radio" name="q3.2" value="no"> No</label>
             <label><input type="radio" name="q3.2" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q3.2" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q3.2" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">3.3</td>
-      <td data-label="Key Reporting Items">User roles and prompt attempts (e.g., 2 users, 3 prompts per case)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Output selection
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe how the final model output(s) were selected; if multiple generations were sampled, detail the selection criteria. Specify whether final outputs were expert-reviewed (e.g., radiologist selected best response), randomly selected (e.g., first output used without filtering), consensus-based (e.g., agreement among multiple reviewers), algorithmic (e.g., ranking by confidence score), or AI-automated (e.g., pipeline-selected output). Report tie-break rules and any rejection filters.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q3.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q3.3" value="partial"> Partial</label>
             <label><input type="radio" name="q3.3" value="no"> No</label>
             <label><input type="radio" name="q3.3" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q3.3" placeholder="Page/Section"></td>
-    </tr>
-    <tr>
-      <td data-label="Section">3.4</td>
-      <td data-label="Key Reporting Items">Output selection (e.g., expert-reviewed, randomly selected, consensus-based)</td>
-      <td data-label="Response">
-        <div class="radio-group">
-            <label><input type="radio" name="q3.4" value="yes"> Yes</label>
-            <label><input type="radio" name="q3.4" value="no"> No</label>
-            <label><input type="radio" name="q3.4" value="na"> N/A</label>
-        </div>
-      </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q3.4" placeholder="Page/Section"></td>
-    </tr>
-    <tr>
-      <td data-label="Section">3.5</td>
-      <td data-label="Key Reporting Items">Reproducibility constraints and uncertainty reporting (e.g., seed limitation in API, variability across outputs)</td>
-      <td data-label="Response">
-        <div class="radio-group">
-            <label><input type="radio" name="q3.5" value="yes"> Yes</label>
-            <label><input type="radio" name="q3.5" value="no"> No</label>
-            <label><input type="radio" name="q3.5" value="na"> N/A</label>
-        </div>
-      </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q3.5" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q3.3" placeholder="Page/Section"></td>
     </tr>
 
-    <!-- SECTION 4: DATASET INTEGRITY -->
     <tr><td class="section-header" colspan="4">4. Dataset Integrity</td></tr>
+
     <tr>
       <td data-label="Section">4.1</td>
-      <td data-label="Key Reporting Items">Dataset name, specific clinical sources (e.g., department electronic health records, clinical trial data), access type (e.g., public, restrictive, private), and license details for publicly available datasets, if applicable</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Dataset name, version, access type, source citation, license, and compliance statement
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Clearly report the dataset used to ensure transparency and traceability. Include the dataset name and version (e.g., MIMIC-CXR v2.0, LIDC-IDRI, BraTS 2023), access type (public, restricted, or private), and citation of the data source. For private datasets, specify the institution or repository name and how the data were accessed (e.g., through department electronic health records, institutional PACS, or trial repository). Also include license details (e.g., PhysioNet Credentialed Health Data License; RSNA data agreement) and a statement confirming compliance with data use agreements or institutional approvals.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.1" value="partial"> Partial</label>
             <label><input type="radio" name="q4.1" value="no"> No</label>
             <label><input type="radio" name="q4.1" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.1" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.1" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.2</td>
-      <td data-label="Key Reporting Items">Ethics and consent statements (e.g., IRB approval, waiver)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Dataset origin
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Specify whether the dataset was collected from a single site or multiple centers. For multi-center datasets, indicate the number and type of institutions (e.g., academic medical centers, community hospitals) and whether data were international or regional.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.2" value="partial"> Partial</label>
             <label><input type="radio" name="q4.2" value="no"> No</label>
             <label><input type="radio" name="q4.2" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.2" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.2" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.3</td>
-      <td data-label="Key Reporting Items">Prior data usage and literature citation</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Ethics and consent statements
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Specify institutional review board (IRB) or ethics committee approval status, including the approval number if applicable. If informed consent was waived, provide a brief justification (e.g., retrospective anonymized data).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.3" value="partial"> Partial</label>
             <label><input type="radio" name="q4.3" value="no"> No</label>
             <label><input type="radio" name="q4.3" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.3" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.3" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.4</td>
-      <td data-label="Key Reporting Items">Dataset composition and source heterogeneity (e.g., single-site vs. multi-center)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Prior dataset usage and publication date
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report any prior usage of the dataset that could affect the evaluation of independence, particularly prior work by the authors or institution. For widely used public datasets, a general acknowledgment of their established use is sufficient. Also state the dataset’s publication or public release date, as datasets made public before a model’s pretraining cutoff may carry a risk of contamination. If usage details are limited by proprietary restrictions, explicitly state the limitations and their source.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.4" value="partial"> Partial</label>
             <label><input type="radio" name="q4.4" value="no"> No</label>
             <label><input type="radio" name="q4.4" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.4" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.4" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.5</td>
-      <td data-label="Key Reporting Items">Preprocessing and alignment details at dataset level (e.g., text de-identification/anonymisation, image pairing)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Dataset composition and data synthesis details
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the composition of the dataset, specifying whether it includes real clinical data, synthetic data, or a combination of both. For public datasets, citing the original source and providing a brief description is sufficient. For private or newly published datasets,  disclose the data generation method (e.g., LLM-based report synthesis, diffusion model for MR image synthesis, GAN-based augmentation of CT scans) and the proportion of synthetic data in the dataset.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.5" value="partial"> Partial</label>
             <label><input type="radio" name="q4.5" value="no"> No</label>
             <label><input type="radio" name="q4.5" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.5" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.5" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.6</td>
-      <td data-label="Key Reporting Items">Missing data handling (e.g., imputation, exclusion)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Sample characteristics and representational bias analysis
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report key characteristics of the dataset population to assess fairness and generalizability. Include demographics (e.g., age distribution, sex balance), clinical characteristics (e.g., disease types, severity levels), and data composition (e.g., imaging modality, number of classes, case distribution). Also evaluate representational bias by analyzing subgroup coverage (e.g., underrepresentation of certain age groups, sex imbalance, or limited geographic diversity).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.6" value="partial"> Partial</label>
             <label><input type="radio" name="q4.6" value="no"> No</label>
             <label><input type="radio" name="q4.6" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.6" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.6" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.7</td>
-      <td data-label="Key Reporting Items">Sample characteristics (e.g., age, sex, disease, imaging modality) and analysis of potential input-level data representational biases</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Reference standard and annotator qualifications
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Define how the reference standard in the dataset was established. Specify the type of reference standard used (e.g., pathology-confirmed diagnosis, radiology report, clinical follow-up, or expert panel consensus) and describe the annotator qualifications (e.g., board-certified radiologist with 10 years of experience, pathology fellow, multidisciplinary tumor board). Include the number of annotators and any disagreement resolution process.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.7" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.7" value="partial"> Partial</label>
             <label><input type="radio" name="q4.7" value="no"> No</label>
             <label><input type="radio" name="q4.7" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.7" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.7" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.8</td>
-      <td data-label="Key Reporting Items">Evaluation reference standard and annotator qualifications (e.g., radiologist consensus)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Preprocessing and data pairing/registration
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Describe all preprocessing steps applied to the dataset before model use. For text data, specify methods for de-identification/anonymization (e.g., removal of protected health information, natural language processing-based redaction). For imaging data, report pairing or registration procedures (e.g., linking reports to imaging studies, spatial alignment across sequences or time points). Also mention any normalization, filtering, resizing, or artifact removal.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.8" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.8" value="partial"> Partial</label>
             <label><input type="radio" name="q4.8" value="no"> No</label>
             <label><input type="radio" name="q4.8" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.8" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.8" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">4.9</td>
-      <td data-label="Key Reporting Items">Clear separation of tuning/test data</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Missing data extent, mechanism, and handling
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report how missing data were assessed and managed. Specify the extent of missing data (e.g., percentage of missing values per variable), the mechanism if known (e.g., missing completely at random, missing at random, missing not at random), and the handling strategy used (e.g., exclusion of incomplete cases, mean/median imputation, model-based imputation, or no imputation). Provide a brief rationale for the chosen method to support transparency and reproducibility.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q4.9" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.9" value="partial"> Partial</label>
             <label><input type="radio" name="q4.9" value="no"> No</label>
             <label><input type="radio" name="q4.9" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q4.9" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q4.9" placeholder="Page/Section"></td>
     </tr>
 
-    <!-- SECTION 5: OUTPUT EVALUATION -->
+    <tr>
+      <td data-label="Section">4.10</td>
+      <td data-label="Item">
+        Separation of training, fine-tuning, internal testing, and external testing datasets
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report how datasets were separated to prevent information leakage. Clearly describe the distinction between training data, fine-tuning data, internal testing data (i.e., held-out cases from the same institution), and external testing data (i.e., from a different institution). State how independence was ensured (e.g., separation by patient ID, study date, or site). Confirm that no internal or external test data were used during training, fine-tuning, or prompt optimization.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q4.10" value="yes"> Yes</label>
+            <label><input type="radio" name="q4.10" value="partial"> Partial</label>
+            <label><input type="radio" name="q4.10" value="no"> No</label>
+            <label><input type="radio" name="q4.10" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q4.10" placeholder="Page/Section"></td>
+    </tr>
+
     <tr><td class="section-header" colspan="4">5. Output Evaluation</td></tr>
+
     <tr>
       <td data-label="Section">5.1</td>
-      <td data-label="Key Reporting Items">Evaluation methods (e.g., Likert scale ratings, automated scoring)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Output evaluation method and performance metrics
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the methods used to evaluate the model and list all relevant performance metrics. State their appropriateness for the task(s) of interest. Specify whether the evaluation was based on human review (e.g., Likert ratings, readability scores, clinical usefulness ratings), automated comparison metrics (e.g., BLEU, ROUGE, BERTScore, AUROC, F1-score), or model-based evaluation (e.g., LLM-as-a-judge scoring).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.1" value="partial"> Partial</label>
             <label><input type="radio" name="q5.1" value="no"> No</label>
             <label><input type="radio" name="q5.1" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.1" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.1" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.2</td>
-      <td data-label="Key Reporting Items">Human rater (e.g., number, specialty, experience level) and reliability analysis details</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Human evaluator characteristics and reliability analysis
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the characteristics of human evaluators involved in the assessment of model outputs, including the number of evaluators, their role or specialty (e.g., radiologist, clinician, domain expert), experience level, and any formal training provided for the evaluation task. Report the methods used to measure evaluator consistency, including inter-rater or intra-rater reliability statistics (e.g., Cohen’s kappa, Fleiss’ kappa, intraclass correlation coefficient).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.2" value="partial"> Partial</label>
             <label><input type="radio" name="q5.2" value="no"> No</label>
             <label><input type="radio" name="q5.2" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.2" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.2" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.3</td>
-      <td data-label="Key Reporting Items">Subgroup-level analysis (e.g., age groups, disease categories)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Statistical analysis of evaluation results
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the statistical methods used to analyze model evaluation outcomes. Specify any hypothesis testing or alternative approaches, the interval estimates of uncertainty used (e.g., confidence intervals, credible intervals, bootstrap intervals), and effect size measures where applicable. Describe the criteria used to interpret statistical evidence (e.g., significance thresholds, Bayesian decision rules, equivalence margins).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.3" value="partial"> Partial</label>
             <label><input type="radio" name="q5.3" value="no"> No</label>
             <label><input type="radio" name="q5.3" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.3" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.3" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.4</td>
-      <td data-label="Key Reporting Items">Performance metrics (e.g., BLEU, ROUGE, F1, AUROC, readability index, hallucination)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Subgroup performance and output bias assessment
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report model performance across predefined subgroups relevant to the clinical task, such as age groups, sex, disease categories, imaging modality, institution, or geographic region. Describe any observed performance differences between subgroups to examine potential output bias.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.4" value="partial"> Partial</label>
             <label><input type="radio" name="q5.4" value="no"> No</label>
             <label><input type="radio" name="q5.4" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.4" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.4" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.5</td>
-      <td data-label="Key Reporting Items">Performance effects of prompt revisions (e.g., v1 vs. v2 differences)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Failure analysis and error metrics
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report how model errors were identified, reviewed, and categorized. Describe the procedure used to detect and classify failures (e.g., hallucination, reasoning error, bias-related error, factual inaccuracy, formatting issue). Provide representative examples of failure types. Report key error metrics (e.g., hallucination rate, factual inaccuracy rate, omission rate) and include any summaries of error distribution.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.5" value="partial"> Partial</label>
             <label><input type="radio" name="q5.5" value="no"> No</label>
             <label><input type="radio" name="q5.5" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.5" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.5" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.6</td>
-      <td data-label="Key Reporting Items">Version comparisons (e.g., GPT-4 vs. GPT-4o) and temporal performance variation</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Output stochasticity and reproducibility constraints
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the results of generative variability assessment based on repeated generations for identical prompts and randomness settings. Provide examples of output differences. Based on the analysis, state any factors limiting exact reproducibility, such as inherent stochastic model behavior, lack of seed control, proprietary or closed-source model access, updates to model versions over time, or restricted access environments where full configuration cannot be disclosed.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.6" value="partial"> Partial</label>
             <label><input type="radio" name="q5.6" value="no"> No</label>
             <label><input type="radio" name="q5.6" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.6" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.6" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.7</td>
-      <td data-label="Key Reporting Items">Assessment of model output bias and fairness across clinically relevant groups (e.g., fairness metrics, qualitative review)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Performance effects of different prompt strategies and prompt revisions
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report how different prompting strategies affected model performance, including comparisons across approaches such as zero-shot, few-shot, chain-of-thought prompting, or prompting using different languages. Report the impact of any prompt revisions (e.g., initial prompt version vs. revised version) on output quality or task performance.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.7" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.7" value="partial"> Partial</label>
             <label><input type="radio" name="q5.7" value="no"> No</label>
             <label><input type="radio" name="q5.7" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.7" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.7" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.8</td>
-      <td data-label="Key Reporting Items">Details on safety testing protocols for harmful, medically inaccuracy, or inappropriate output</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Model version comparisons and temporal performance variation
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report comparisons of model performance across different versions of the model (e.g., llama-3.1-8b v1.0, llama-3.1-8b v1.1) or across different release dates of the same version, if such evaluations were performed or relevant to the study period. Describe how performance changed over time or between versions, and specify the conditions used for comparison.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.8" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.8" value="partial"> Partial</label>
             <label><input type="radio" name="q5.8" value="no"> No</label>
             <label><input type="radio" name="q5.8" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.8" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.8" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.9</td>
-      <td data-label="Key Reporting Items">Methods for explainability/interpretability of model outputs (if used) and their limitations</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Methods for explainability and interpretability of model outputs
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the methods used to interpret or explain model outputs and describe how they were applied, as applicable to the model type and study context. Describe the scope and known limitations of the chosen explainability approach in the study context.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.9" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.9" value="partial"> Partial</label>
             <label><input type="radio" name="q5.9" value="no"> No</label>
             <label><input type="radio" name="q5.9" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.9" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.9" placeholder="Page/Section"></td>
     </tr>
+
     <tr>
       <td data-label="Section">5.10</td>
-      <td data-label="Key Reporting Items">Comparison of clinically relevant non-FM baselines or existing clinical standards (if applicable; e.g., expert human performance, established guidelines)</td>
-      <td data-label="Response">
+      <td data-label="Item">
+        Comparison with clinically relevant benchmarks
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report comparisons between model performance and appropriate clinical benchmarks. These benchmarks may include specialist task-specific AI models, expert human performance, or established clinical guidelines. Describe the comparison framework and reference standards used.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
         <div class="radio-group">
             <label><input type="radio" name="q5.10" value="yes"> Yes</label>
+            <label><input type="radio" name="q5.10" value="partial"> Partial</label>
             <label><input type="radio" name="q5.10" value="no"> No</label>
             <label><input type="radio" name="q5.10" value="na"> N/A</label>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.10" placeholder="Page/Section"></td>
+      <td data-label="Location"><input type="text" name="loc_q5.10" placeholder="Page/Section"></td>
     </tr>
+
+    <tr><td class="section-header" colspan="4">6. Implementation</td></tr>
+
     <tr>
-      <td data-label="Section">5.11</td>
-      <td data-label="Key Reporting Items">Assessment of potential clinical utility or added value (e.g., diagnostic accuracy improvement, time-saving for clinicians, improved patient understanding)</td>
-      <td data-label="Response">
-        <div class="radio-group">
-            <label><input type="radio" name="q5.11" value="yes"> Yes</label>
-            <label><input type="radio" name="q5.11" value="no"> No</label>
-            <label><input type="radio" name="q5.11" value="na"> N/A</label>
+      <td data-label="Section">6.1</td>
+      <td data-label="Item">
+        Declared intended application and scope of use
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report the intended purpose of the model. Describe the target application, such as diagnostic decision support, medical question answering, report generation, workflow triage, patient communication, or educational support.</span>
         </div>
       </td>
-      <td data-label="Page / Section Ref."><input type="text" name="page_q5.11" placeholder="Page/Section"></td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.1" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.1" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.1" value="no"> No</label>
+            <label><input type="radio" name="q6.1" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.1" placeholder="Page/Section"></td>
     </tr>
+
+    <tr>
+      <td data-label="Section">6.2</td>
+      <td data-label="Item">
+        Clinical workflow integration
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report whether, and if applicable, how and where the model was integrated into the clinical workflow. Specify the integration mode (e.g., embedded in PACS or RIS, decision-support dashboard, web-based interface, standalone software) and the interaction point in the workflow (e.g., pre-reading triage, concurrent reading, post-report review, quality assurance). State the intended user role (e.g., radiologist, resident, technologist) and whether patient-facing interaction was involved.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.2" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.2" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.2" value="no"> No</label>
+            <label><input type="radio" name="q6.2" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.2" placeholder="Page/Section"></td>
+    </tr>
+
+    <tr>
+      <td data-label="Section">6.3</td>
+      <td data-label="Item">
+        Measured clinical utility or added value
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report measures of clinical utility or added value obtained from model use. Describe how the model contributed to outcomes such as improvement in diagnostic accuracy, reduction in reporting or decision time, enhancement of workflow efficiency, increased clinician confidence, or improved patient understanding.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.3" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.3" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.3" value="no"> No</label>
+            <label><input type="radio" name="q6.3" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.3" placeholder="Page/Section"></td>
+    </tr>
+
+    <tr>
+      <td data-label="Section">6.4</td>
+      <td data-label="Item">
+        Model limitations, explicit clinical non-use cases, and potential misuse considerations
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report known limitations of the model and clearly state clinical scenarios where it should not be used. Describe explicit non-use cases (e.g., high-risk decision-making without human oversight, unsupported imaging modalities, unsupported patient populations) and identify foreseeable risks of misuse. Include considerations related to potential patient harm, safety concerns, or health system risks.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.4" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.4" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.4" value="no"> No</label>
+            <label><input type="radio" name="q6.4" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.4" placeholder="Page/Section"></td>
+    </tr>
+
+    <tr>
+      <td data-label="Section">6.5</td>
+      <td data-label="Item">
+        Safety testing and monitoring protocols
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report procedures used to identify and manage harmful, clinically unsafe, or medically inaccurate outputs. Describe any safety testing performed before deployment (e.g., screening for harmful recommendations or toxic responses, sandboxing) and monitoring protocols used during model interaction (e.g., automated safety filters, human review of unsafe outputs).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.5" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.5" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.5" value="no"> No</label>
+            <label><input type="radio" name="q6.5" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.5" placeholder="Page/Section"></td>
+    </tr>
+
+    <tr>
+      <td data-label="Section">6.6</td>
+      <td data-label="Item">
+        Data security and privacy safeguards
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report measures used to protect data security and patient privacy during model use if patient or sensitive data were processed. Describe how prompt and user data were handled, including storage policies, duration of retention, and whether data were reused for model improvement. Specify data routing and regional processing locations if applicable (e.g., EU vs. US data centers) and report safeguards for live handling of protected health information (PHI), such as de-identification, access control, and encryption.</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.6" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.6" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.6" value="no"> No</label>
+            <label><input type="radio" name="q6.6" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.6" placeholder="Page/Section"></td>
+    </tr>
+
+    <tr>
+      <td data-label="Section">6.7</td>
+      <td data-label="Item">
+        Governance, auditability, and oversight
+        <div class="tooltip">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Report governance measures and institutional oversight applied to the use of the model in the study, as distinct from the initial ethics approval. Specify procedures for auditability (e.g., logging of model interactions, traceability of outputs) and formal oversight, especially when using external or API-based models (e.g., use of secure institutional accounts vs public APIs).</span>
+        </div>
+      </td>
+      <td data-label="Reported">
+        <div class="radio-group">
+            <label><input type="radio" name="q6.7" value="yes"> Yes</label>
+            <label><input type="radio" name="q6.7" value="partial"> Partial</label>
+            <label><input type="radio" name="q6.7" value="no"> No</label>
+            <label><input type="radio" name="q6.7" value="na"> N/A</label>
+        </div>
+      </td>
+      <td data-label="Location"><input type="text" name="loc_q6.7" placeholder="Page/Section"></td>
+    </tr>
+
   </tbody>
 </table>
 
-<div class="center-button">
-  <button onclick="window.print()">Print to PDF</button>
+<div id="summary-content">
+    <h2>Summary of REFINE Checklist Completion by Section
+</h2>
+    <div class="chart-container">
+        <div class="chart-legend">
+            <div class="legend-item"><span class="legend-color bg-yes"></span> Yes</div>
+            <div class="legend-item"><span class="legend-color bg-partial"></span> Partial</div>
+            <div class="legend-item"><span class="legend-color bg-no"></span> No</div>
+            <div class="legend-item"><span class="legend-color bg-na"></span> N/A</div>
+            <div class="legend-item"><span class="legend-color bg-empty"></span> Empty</div>
+        </div>
+
+        <div id="chart-rows">
+            </div>
+    </div>
 </div>
+
+<div class="citation-note">
+    <p><strong>Note:</strong> Please cite the following article when using this checklist: <em>[Citation Details]</em></p>
+</div>
+
+<div class="action-buttons">
+  <button class="btn-print" onclick="window.print()">Print to PDF</button>
+<button class="btn-excel" onclick="exportToExcel()">Export to Excel</button>
+  <button class="btn-download-img" onclick="downloadSummaryImage()">Download Summary Image</button>
+</div>
+
+<script>
+    // --- CHART FUNCTIONS ---
+    function createSegment(pct, type, label) {
+        const div = document.createElement('div');
+        div.className = `bar-segment bg-${type}`;
+        div.style.width = pct;
+        
+        const numVal = parseInt(pct);
+        if (numVal > 5) {
+            div.textContent = pct;
+        } else {
+            div.classList.add('small-segment');
+        }
+        return div;
+    }
+
+    function createChartRow(label, stats, isOverall = false) {
+        const row = document.createElement('div');
+        row.className = `chart-row ${isOverall ? 'overall-row' : ''}`;
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'chart-label';
+        labelDiv.textContent = label;
+
+        const barWrapper = document.createElement('div');
+        barWrapper.className = 'chart-bar-wrapper';
+
+        barWrapper.appendChild(createSegment(stats.yes, 'yes'));
+        barWrapper.appendChild(createSegment(stats.partial, 'partial'));
+        barWrapper.appendChild(createSegment(stats.no, 'no'));
+        barWrapper.appendChild(createSegment(stats.na, 'na'));
+        barWrapper.appendChild(createSegment(stats.empty, 'empty'));
+
+        row.appendChild(labelDiv);
+        row.appendChild(barWrapper);
+        return row;
+    }
+
+    function calculateStats() {
+        const sectionNames = {
+            1: "1. Model Specification",
+            2: "2. Prompt Design",
+            3: "3. Stochasticity Control",
+            4: "4. Dataset Integrity",
+            5: "5. Output Evaluation",
+            6: "6. Implementation"
+        };
+
+        const sections = [1, 2, 3, 4, 5, 6];
+        let grandTotalQuestions = 0;
+        let grandYes = 0, grandPartial = 0, grandNo = 0, grandNa = 0, grandEmpty = 0;
+        
+        const container = document.getElementById('chart-rows');
+        container.innerHTML = ''; 
+
+        sections.forEach(secNum => {
+            const inputs = document.querySelectorAll(`input[type="radio"][name^="q${secNum}."]`);
+            const uniqueNames = new Set();
+            inputs.forEach(input => uniqueNames.add(input.name));
+            const totalQuestions = uniqueNames.size;
+
+            if (totalQuestions === 0) return;
+
+            let yesCount = 0, partialCount = 0, noCount = 0, naCount = 0;
+
+            const checkedInputs = document.querySelectorAll(`input[type="radio"][name^="q${secNum}."]:checked`);
+            checkedInputs.forEach(input => {
+                if (input.value === 'yes') yesCount++;
+                else if (input.value === 'partial') partialCount++;
+                else if (input.value === 'no') noCount++;
+                else if (input.value === 'na') naCount++;
+            });
+
+            const totalChecked = yesCount + partialCount + noCount + naCount;
+            const emptyCount = totalQuestions - totalChecked;
+
+            grandTotalQuestions += totalQuestions;
+            grandYes += yesCount;
+            grandPartial += partialCount;
+            grandNo += noCount;
+            grandNa += naCount;
+            grandEmpty += emptyCount;
+
+            const stats = {
+                yes: ((yesCount / totalQuestions) * 100).toFixed(0) + '%',
+                partial: ((partialCount / totalQuestions) * 100).toFixed(0) + '%',
+                no: ((noCount / totalQuestions) * 100).toFixed(0) + '%',
+                na: ((naCount / totalQuestions) * 100).toFixed(0) + '%',
+                empty: ((emptyCount / totalQuestions) * 100).toFixed(0) + '%'
+            };
+
+            container.appendChild(createChartRow(sectionNames[secNum], stats));
+        });
+
+        if (grandTotalQuestions > 0) {
+            const overallStats = {
+                yes: ((grandYes / grandTotalQuestions) * 100).toFixed(0) + '%',
+                partial: ((grandPartial / grandTotalQuestions) * 100).toFixed(0) + '%',
+                no: ((grandNo / grandTotalQuestions) * 100).toFixed(0) + '%',
+                na: ((grandNa / grandTotalQuestions) * 100).toFixed(0) + '%',
+                empty: ((grandEmpty / grandTotalQuestions) * 100).toFixed(0) + '%'
+            };
+            container.appendChild(createChartRow("Overall", overallStats, true));
+        }
+    }
+
+    // --- DOWNLOAD IMAGE FUNCTION ---
+    function downloadSummaryImage() {
+        const element = document.getElementById('summary-content');
+        
+        if (typeof html2canvas === 'undefined') {
+            alert('Image generation library not loaded yet. Please try again in a moment.');
+            return;
+        }
+
+        html2canvas(element, {
+            scale: 2, 
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'REFINE-Checklist-Summary.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error('Image generation failed:', err);
+            alert('Could not generate image. Please try again.');
+        });
+    }
+
+    // --- EXPORT TO EXCEL FUNCTION ---
+    function exportToExcel() {
+        const table = document.getElementById('main-checklist');
+        const rows = table.querySelectorAll('tbody tr');
+        const data = [];
+
+        // Headers
+        data.push(['Section', 'Item', 'Response', 'Page/Section Location']);
+
+        rows.forEach(row => {
+            // Skip section headers (rows that span columns)
+            if (row.querySelector('.section-header')) return;
+
+            // 1. Get Section Number
+            const secCell = row.querySelector('td[data-label="Section"]');
+            const section = secCell ? secCell.innerText.trim() : '';
+
+            // 2. Get Item Text (Clean tooltip)
+            const itemCell = row.querySelector('td[data-label="Item"]');
+            let itemText = '';
+            if (itemCell) {
+                // Clone node to safely remove tooltip without affecting DOM
+                const clone = itemCell.cloneNode(true);
+                const tooltip = clone.querySelector('.tooltip');
+                if (tooltip) tooltip.remove();
+                itemText = clone.innerText.trim();
+            }
+
+            // 3. Get Response
+            let response = '';
+            const checkedRadio = row.querySelector('input[type="radio"]:checked');
+            if (checkedRadio) {
+                // Capitalize first letter for nicer Excel output
+                response = checkedRadio.value.charAt(0).toUpperCase() + checkedRadio.value.slice(1);
+                if (response === 'Na') response = 'N/A'; // Fix N/A casing
+            }
+
+            // 4. Get Location Text
+            const locInput = row.querySelector('input[type="text"]');
+            const location = locInput ? locInput.value.trim() : '';
+
+            data.push([section, itemText, response, location]);
+        });
+
+        // Create Workbook
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "REFINE Checklist");
+
+        // Download File
+        XLSX.writeFile(wb, "REFINE_Checklist_Data.xlsx");
+    }
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+        const allRadios = document.querySelectorAll('input[type="radio"]');
+        allRadios.forEach(radio => {
+            radio.addEventListener('change', calculateStats);
+        });
+        calculateStats();
+    });
+</script>
 
 </body>
 </html>
