@@ -17,9 +17,21 @@
       line-height: 1.6;
       color: #333;
     }
+
+    /* --- LOGO STYLING (NEW) --- */
+    .logo-container {
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .logo-container img {
+        max-width: 300px; /* Adjust this width to make logo larger/smaller */
+        height: auto;
+    }
+
     h1 {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 5px;
       margin-bottom: 25px;
       font-size: 1.8em;
     }
@@ -242,10 +254,10 @@
         print-color-adjust: exact;
     }
     
-    .bg-yes { background-color: #4caf50; }      
+    .bg-yes { background-color: #4caf50; }       
     .bg-partial { background-color: #ff9800; }  
-    .bg-no { background-color: #f44336; }       
-    .bg-na { background-color: #9e9e9e; }       
+    .bg-no { background-color: #f44336; }        
+    .bg-na { background-color: #9e9e9e; }        
     .bg-empty { background-color: #e0e0e0; color: #888; } 
 
     .bar-segment.small-segment { color: transparent; }
@@ -266,8 +278,8 @@
     /* --- CITATION BOX --- */
     .citation-note {
         width: 100%;
-        max-width: 1000px;         
-        margin: 30px auto;         
+        max-width: 1000px;           
+        margin: 30px auto;           
         padding: 15px;
         background-color: #fff8e1;
         border: 1px solid #ffe0b2;
@@ -275,7 +287,7 @@
         border-radius: 4px;
         font-size: 0.95em;
         color: #5d4037;
-        box-sizing: border-box;    
+        box-sizing: border-box;     
     }
 
     /* --- ACTION BUTTONS --- */
@@ -342,10 +354,10 @@
       th {
         background-color: #f8f9fa !important;
       }
-      .bg-yes { background-color: #4caf50 !important; }      
+      .bg-yes { background-color: #4caf50 !important; }       
       .bg-partial { background-color: #ff9800 !important; }  
-      .bg-no { background-color: #f44336 !important; }       
-      .bg-na { background-color: #9e9e9e !important; }       
+      .bg-no { background-color: #f44336 !important; }        
+      .bg-na { background-color: #9e9e9e !important; }        
       .bg-empty { background-color: #e0e0e0 !important; }
     }
 
@@ -401,7 +413,9 @@
 </head>
 <body>
 
-<h1>REFINE Checklist v1.0</h1>
+<div class="logo-container">
+    <img src="logo.png" alt="REFINE Logo">
+</div>
 
 <table id="main-checklist">
   <thead>
