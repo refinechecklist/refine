@@ -452,7 +452,7 @@
         Model name, vendor/developer, version/identifier, release date, and training/knowledge cutoff date
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the full model identity. Specify the model name (e.g., GPT-5), vendor or developer (e.g., OpenAI or Stanford University), version or API identifier (e.g., 5 or gpt-5-2025-08-07), and model release date. Also, report the training or knowledge cutoff date, which defines the latest point up to which the model was trained.</span>
+            <span class="tooltip-text">Report the full model identity. Specify the model name (e.g., GPT-5), vendor or developer (e.g., OpenAI or Stanford University), version or application programming interface (API) identifier (e.g., 5 or gpt-5-2025-08-07), and model release date. If an official release date is unavailable, report the date accessed and cite the model card/changelog version. Also, report the training or knowledge cutoff date (if provided), which defines the latest point up to which the model was trained.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -489,10 +489,10 @@
     <tr>
       <td data-label="Section">1.3</td>
       <td data-label="Item">
-        Model pretraining, posttraining, and inference-time adaptation strategy
+        Model pretraining, post-training, and inference-time adaptation strategy
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Describe how the model was developed or adapted for the study task. Indicate whether the study involved training a new foundation model (pretraining from scratch or continued pretraining) or posttraining an existing one. For training, summarize the pretraining corpus and objectives. For posttraining, specify whether it involved tuning or alignment, and whether model weights were updated. If weights were updated, state the method (e.g., supervised fine-tuning, reinforcement learning) and the technique (e.g., full fine-tuning, parameter-efficient fine-tuning), including key details such as dataset size, steps/epochs, batch size, and optimizer. If no weight updates were performed, describe the inference-time adaptation strategy (e.g., prompting, retrieval-augmented generation) and report any external tools or APIs used at inference. Indicate whether clinical data were included, and clearly specify the stage(s) at which they were used (pretraining, posttraining, or inference-time adaptation).</span>
+            <span class="tooltip-text">Describe how the model was developed or adapted for the study task. Indicate whether the study involved training a new foundation model (pretraining from scratch or continued pretraining) or post-training an existing one. For training, summarize the pretraining corpus and objectives. For post-training, specify whether it involved tuning or alignment, and whether model weights were updated. If weights were updated, state the method (e.g., supervised fine-tuning, reinforcement learning) and the technique (e.g., full fine-tuning, parameter-efficient fine-tuning), including key details such as dataset size, steps/epochs, batch size, and optimizer. If no weight updates were performed, describe the inference-time adaptation strategy (e.g., prompting, retrieval-augmented generation) and report any external tools or APIs used at inference. Indicate whether clinical data were included, and clearly specify the stage(s) at which they were used (pretraining, post-training, or inference-time adaptation).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -552,7 +552,7 @@
         Model access
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Describe how the model was accessed during the study. Specify whether access was through a graphical user interface (GUI) (e.g., chat platform) or an application programming interface (API). For API access, indicate whether it was locally hosted, securely hosted (e.g., an enterprise cloud), or publicly hosted.</span>
+            <span class="tooltip-text">Describe how the model was accessed during the study. Specify whether access was through a graphical user interface (e.g., chat platform) or an API. For API access, indicate whether it was locally hosted, securely hosted (e.g., an enterprise cloud), or publicly hosted.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -592,7 +592,7 @@
         Computational requirements
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the computational resources required for model development and use. Specify hardware and resource needs for different levels, including training, fine-tuning, alignment, and inference (e.g., GPU/TPU type, number of compute nodes, memory requirements, runtime, or cloud compute specifications).</span>
+            <span class="tooltip-text">Report the computational resources required for model development and use. Specify hardware and resource needs for different levels, including training, fine-tuning, alignment, and inference (e.g., Graphics processing unit/Tensor processing unit type, number of compute nodes, memory requirements, runtime, or cloud compute specifications).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -838,7 +838,7 @@
         Ethics and consent statements
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Specify institutional review board (IRB) or ethics committee approval status, including the approval number if applicable. If informed consent was waived, provide a brief justification (e.g., retrospective anonymized data).</span>
+            <span class="tooltip-text">Specify institutional review board or ethics committee approval status, including the approval number if applicable. If informed consent was waived, provide a brief justification (e.g., retrospective anonymized data).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -878,7 +878,7 @@
         Dataset composition and data synthesis details
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the composition of the dataset, specifying whether it includes real clinical data, synthetic data, or a combination of both. For public datasets, citing the original source and providing a brief description is sufficient. For private or newly published datasets,  disclose the data generation method (e.g., LLM-based report synthesis, diffusion model for MR image synthesis, GAN-based augmentation of CT scans) and the proportion of synthetic data in the dataset.</span>
+            <span class="tooltip-text">Report the composition of the dataset, specifying whether it includes real clinical data, synthetic data, or a combination of both. For public datasets, citing the original source and providing a brief description is sufficient. For private or newly published datasets, disclose the data generation method (e.g., LLM-based report synthesis, diffusion model for MR image synthesis, generative adversarial network-based augmentation of CT scans) and the proportion of synthetic data in the dataset.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -1000,7 +1000,7 @@
         Output evaluation method and performance metrics
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the methods used to evaluate the model and list all relevant performance metrics. State their appropriateness for the task(s) of interest. Specify whether the evaluation was based on human review (e.g., Likert ratings, readability scores, clinical usefulness ratings), automated comparison metrics (e.g., BLEU, ROUGE, BERTScore, AUROC, F1-score), or model-based evaluation (e.g., LLM-as-a-judge scoring).</span>
+            <span class="tooltip-text">Report the methods used to evaluate the model and list all relevant performance metrics. State their appropriateness for the task(s) of interest. Specify whether the evaluation was based on human review (e.g., Likert ratings, readability scores, clinical usefulness ratings), task-performance metrics (e.g., AUROC, F1-score, sensitivity, specificity, calibration measures), text or semantic similarity metrics (e.g., BLEU, ROUGE, BERTScore), or model-based evaluation (e.g., LLM-as-a-judge scoring).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -1180,7 +1180,7 @@
         Comparison with clinically relevant benchmarks
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report comparisons between model performance and appropriate clinical benchmarks. These benchmarks may include specialist task-specific AI models, expert human performance, or established clinical guidelines. Describe the comparison framework and reference standards used.</span>
+            <span class="tooltip-text">Report comparisons between model performance and appropriate clinical benchmarks. These benchmarks may include established clinical standard-of-care (e.g., expert human performance, clinical guidelines). Comparisons to specialist task-specific artificial intelligence models should be reported as technical benchmarks, distinct from clinical reference standards. Describe the comparison framework and reference standards used.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -1302,7 +1302,7 @@
         Data security and privacy safeguards
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report measures used to protect data security and patient privacy during model use if patient or sensitive data were processed. Describe how prompt and user data were handled, including storage policies, duration of retention, and whether data were reused for model improvement. Specify data routing and regional processing locations if applicable (e.g., EU vs. US data centers) and report safeguards for live handling of protected health information (PHI), such as de-identification, access control, and encryption.</span>
+            <span class="tooltip-text">Report measures used to protect data security and patient privacy during model use if patient or sensitive data were processed. Describe how prompt and user data were handled, including storage policies, duration of retention, and whether data were reused for model improvement. Specify data routing and regional processing locations if applicable (e.g., EU vs. US data centers) and report safeguards for live handling of protected health information, such as de-identification, access control, and encryption.</span>
         </div>
       </td>
       <td data-label="Reported">
