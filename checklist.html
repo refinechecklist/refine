@@ -116,17 +116,15 @@
         flex-wrap: wrap; 
     }
 
-    /* --- TOOLTIP STYLES --- */
+    /* --- FIXED TOOLTIP STYLES --- */
     .tooltip {
         position: relative;
         display: inline-block;
         margin-left: 8px;
         cursor: help;
         vertical-align: middle;
-        top: calc(100% + 6px);
     }
-    .tooltip-icon {
-        background-color: #12A8C5;
+    .tooltip-icon, .tooltip-icon2 {
         color: white;
         width: 18px;
         height: 18px;
@@ -137,21 +135,13 @@
         font-weight: bold;
         display: inline-block;
     }
-    .tooltip-icon2 {
-        background-color: #FFA500;
-        color: white;
-        width: 18px;
-        height: 18px;
-        text-align: center;
-        line-height: 18px;
-        border-radius: 50%;
-        font-size: 12px;
-        font-weight: bold;
-        display: inline-block;
-    }
+    .tooltip-icon { background-color: #12A8C5; }
+    .tooltip-icon2 { background-color: #FFA500; }
+
     .tooltip-text {
         visibility: hidden;
         width: 400px; 
+        max-width: 85vw; /* FIX: Prevents tooltip from being wider than mobile screens */
         background-color: #343a40;
         color: #fff;
         text-align: left;
@@ -161,20 +151,33 @@
         z-index: 1000; 
         bottom: 140%; 
         left: 50%;
-        margin-left: -200px; 
+        transform: translateX(-50%); /* FIX: Centers perfectly on any screen size */
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
         font-weight: normal;
         font-size: 0.85em;
         line-height: 1.5;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        pointer-events: none; /* FIX: Prevents tooltip flickering */
     }
+
+    /* FIX: Flipped tooltips for Table Header to prevent top-edge cut-off */
+    thead .tooltip-text {
+        bottom: auto;
+        top: 140%;
+    }
+    thead .tooltip-text::after {
+        top: auto;
+        bottom: 100%;
+        border-color: transparent transparent #343a40 transparent;
+    }
+
     .tooltip-text::after {
         content: "";
         position: absolute;
         top: 100%;
         left: 50%;
-        margin-left: -5px;
+        transform: translateX(-50%);
         border-width: 5px;
         border-style: solid;
         border-color: #343a40 transparent transparent transparent;
@@ -399,11 +402,6 @@
 
       input[type="text"] { padding: 10px; }
       
-      .tooltip-text {
-        width: 240px;
-        margin-left: -200px; 
-      }
-      
       .chart-row { flex-direction: column; align-items: flex-start; }
       .chart-label { width: 100%; text-align: left; margin-bottom: 5px; }
       .chart-bar-wrapper { width: 100%; }
@@ -424,7 +422,17 @@
       <th class="col-item">Item
         <div class="tooltip">
             <span class="tooltip-icon2">i</span>
-            <span class="tooltip-text">Definitions of technical terms are provided in the standardized terminology table in the main manuscript.</span>
+            <span class="tooltip-text"><ul>
+  <li><strong>Training:</strong> The process of optimizing a model’s parameters using data and an objective function to minimize a defined loss metric through iterative gradient updates.</li>
+  <li><strong>Pretraining:</strong> Training performed on large-scale, general, or weakly supervised datasets, often via self-supervised learning, to develop broad representations and foundational capabilities.</li>
+  <li><strong>Post-training:</strong> The subsequent optimization phase that includes supervised fine-tuning, instruction tuning, task-specific or domain-specific adaptation, and alignment methods such as Reinforcement Learning from Human Feedback (RLHF), Reinforcement Learning from AI Feedback (RLAIF), and Direct Preference Optimization (DPO). This phase refines the pretrained model’s behavior toward human intent, safety, or specialized performance.</li>
+  <li><strong>Fine-tuning:</strong> A targeted form of post-training focused on adapting model weights for a particular task, dataset, or domain to achieve an explicit objective such as classification accuracy or instruction adherence.</li>
+  <li><strong>Inference-time adaptation:</strong> Adaptation without weight updates, achieved through context conditioning or external mechanisms such as prompting, retrieval-augmented generation, tool integration, or dynamic hyperparameter selection.</li>
+  <li><strong>Alignment:</strong> Steering model behavior toward human intent or domain goals, achieved through weight-updating post-training methods such as RLHF, RLAIF, or DPO, or through inference-time methods such as prompting or retrieval.</li>
+  <li><strong>Testing:</strong> Final, strictly unseen hold-out evaluation performed once, with no design choices informed by test feedback.</li>
+  <li><strong>Validation:</strong> Any confirmation process that does not refer to a held-out data partition (i.e., not training/validation/testing splits).  Throughout this checklist, “validation” refers to verifying the correctness or adequacy of procedures and is not used to denote a machine learning validation dataset due to its ambiguity.</li>
+</ul>
+</span>
         </div>
     </th>
       <th class="col-reported">Reported
