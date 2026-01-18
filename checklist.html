@@ -422,7 +422,7 @@
       <th class="col-item">Item
         <div class="tooltip">
             <span class="tooltip-icon2">i</span>
-            <span class="tooltip-text"><ul>
+            <span class="tooltip-text"><ul><strong>Standardized terminology used in REFINE</strong>
   <li><strong>Training:</strong> The process of optimizing a model’s parameters using data and an objective function to minimize a defined loss metric through iterative gradient updates.</li>
   <li><strong>Pretraining:</strong> Training performed on large-scale, general, or weakly supervised datasets, often via self-supervised learning, to develop broad representations and foundational capabilities.</li>
   <li><strong>Post-training:</strong> The subsequent optimization phase that includes supervised fine-tuning, instruction tuning, task-specific or domain-specific adaptation, and alignment methods such as Reinforcement Learning from Human Feedback (RLHF), Reinforcement Learning from AI Feedback (RLAIF), and Direct Preference Optimization (DPO). This phase refines the pretrained model’s behavior toward human intent, safety, or specialized performance.</li>
@@ -480,7 +480,7 @@
         Model architecture and key characteristics
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the model’s foundational architecture (e.g., transformer, state-space models) and any key design features (e.g., mixture-of-experts, diffusion-based models). Include parameter count if available.</span>
+            <span class="tooltip-text">Report the model’s foundational architecture (e.g., transformer, state-space models) and any key design features (e.g., mixture-of-experts, diffusion-based models). Include parameter count if available. For multimodal models, explicitly specify the image encoder architecture (e.g., ResNet, vision transformer) and the fusion strategy (e.g., cross-attention).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -520,7 +520,7 @@
         Modality support details (input and output) and limitations
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the input and output modalities supported by the model (e.g., text, image, audio, video). Describe any technical limitations, such as maximum context length (e.g., up to 128k tokens), image resolution constraints (e.g., ≤1024×1024 pixels), or input-pipeline restrictions (e.g.,  DICOM files require prior conversion to image tensors; only 2D images accepted).</span>
+            <span class="tooltip-text">Report the input and output modalities supported by the model (e.g., text, image, audio, video). Describe any technical limitations, such as maximum context length (e.g., up to 128k tokens), image resolution constraints (e.g., ≤1024×1024 pixels), patch size, or input-pipeline restrictions (e.g., DICOM files require prior conversion to image tensors; only 2D images accepted).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -662,7 +662,7 @@
         Prompt modality, language, technical input specification, and full prompt content
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Specify the prompt modality (e.g., text, image, audio), type of input(s) (e.g., chest X-ray images, discharge summary text, pathology reports), and the language (if text prompts are used or images contain text). Include relevant technical characteristics such as resolution, encoding, or preprocessing applied before input conversion. Provide the full prompt content used in the study (e.g., verbatim text for text prompts or representative examples for non-text prompts).</span>
+            <span class="tooltip-text">Specify the prompt modality (e.g., text, image, audio), type of input(s) (e.g., chest X-ray images, discharge summary text, pathology reports), and the language (if text prompts are used or images contain text). Include relevant technical characteristics such as resolution, encoding, or preprocessing applied before input conversion. Specify if and how prior studies or longitudinal data were included in the prompt for comparison. Provide the full prompt content used in the study (e.g., verbatim text for text prompts or representative examples for non-text prompts).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -946,7 +946,7 @@
         Preprocessing and data pairing/registration
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Describe all preprocessing steps applied to the dataset before model use. For text data, specify methods for de-identification/anonymization (e.g., removal of protected health information, natural language processing-based redaction). For imaging data, report pairing or registration procedures (e.g., linking reports to imaging studies, spatial alignment across sequences or time points). Also mention any normalization, filtering, resizing, or artifact removal.</span>
+            <span class="tooltip-text">Describe all preprocessing steps applied to the dataset before model use. For text data, specify methods for de-identification/anonymization (e.g., removal of protected health information, natural language processing-based redaction). For imaging data, report pairing or registration procedures (e.g., linking reports to imaging studies, spatial alignment across sequences or longitudinal time points). Report specific processing pipelines such as DICOM window/level settings, normalization techniques, and multi-sequence handling. Also mention any normalization, filtering, resizing, or artifact removal.</span>
         </div>
       </td>
       <td data-label="Reported">
