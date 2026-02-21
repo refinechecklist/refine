@@ -1148,7 +1148,7 @@
         Model version comparisons and temporal performance variation
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report comparisons of model performance across different versions of the model (e.g., llama-3.1-8b v1.0 or llama-3.1-8b v1.1) or across different release dates of the same version, if such evaluations were performed or relevant to the study period. Describe how performance changed over time or between versions, and specify the conditions used for comparison.</span>
+            <span class="tooltip-text">Report comparisons of model performance across different versions of the model (e.g., Llama-3.1-8b v1.0 or Llama-3.1-8b v1.1) or across different release dates of the same version, if such evaluations were performed or relevant to the study period. Describe how performance changed over time or between versions, and specify the conditions used for comparison.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -1348,8 +1348,7 @@
 </table>
 
 <div id="summary-content">
-    <h2>Summary of Checklist Completion by Section
-</h2>
+    <h2>Summary of Checklist Completion by Section</h2>
     <div class="chart-container">
         <div class="chart-legend">
             <div class="legend-item"><span class="legend-color bg-yes"></span> Yes</div>
@@ -1361,10 +1360,11 @@
 
         <div id="chart-rows">
             </div>
+        <div style="text-align: right; font-size: 0.8em; color: #777; margin-top: 10px;">
+            *Percentages are calculated independently and may not sum to exactly 100% due to rounding.
+        </div>
     </div>
 </div>
-
-
 
 <div class="action-buttons">
   <button class="btn-print" onclick="window.print()">Print to PDF</button>
@@ -1376,7 +1376,6 @@
     <p><strong>Note:</strong> Please cite the following article when using this checklist: <em>[Citation Details]</em></p>
 </div>
     
-    
 <script>
     // --- CHART FUNCTIONS ---
     function createSegment(pct, type, label) {
@@ -1384,8 +1383,8 @@
         div.className = `bar-segment bg-${type}`;
         div.style.width = pct;
         
-        const numVal = parseInt(pct);
-        if (numVal > 5) {
+        const numVal = parseFloat(pct);
+        if (numVal >= 5) {
             div.textContent = pct;
         } else {
             div.classList.add('small-segment');
@@ -1413,6 +1412,13 @@
         row.appendChild(labelDiv);
         row.appendChild(barWrapper);
         return row;
+    }
+
+    // Format percentage to 1 decimal place, stripping unnecessary '.0'
+    function formatPct(count, total) {
+        if (total === 0) return '0%';
+        let pct = (count / total) * 100;
+        return pct.toFixed(1).replace(/\.0$/, '') + '%';
     }
 
     function calculateStats() {
@@ -1461,11 +1467,11 @@
             grandEmpty += emptyCount;
 
             const stats = {
-                yes: ((yesCount / totalQuestions) * 100).toFixed(0) + '%',
-                partial: ((partialCount / totalQuestions) * 100).toFixed(0) + '%',
-                no: ((noCount / totalQuestions) * 100).toFixed(0) + '%',
-                na: ((naCount / totalQuestions) * 100).toFixed(0) + '%',
-                empty: ((emptyCount / totalQuestions) * 100).toFixed(0) + '%'
+                yes: formatPct(yesCount, totalQuestions),
+                partial: formatPct(partialCount, totalQuestions),
+                no: formatPct(noCount, totalQuestions),
+                na: formatPct(naCount, totalQuestions),
+                empty: formatPct(emptyCount, totalQuestions)
             };
 
             container.appendChild(createChartRow(sectionNames[secNum], stats));
@@ -1473,11 +1479,11 @@
 
         if (grandTotalQuestions > 0) {
             const overallStats = {
-                yes: ((grandYes / grandTotalQuestions) * 100).toFixed(0) + '%',
-                partial: ((grandPartial / grandTotalQuestions) * 100).toFixed(0) + '%',
-                no: ((grandNo / grandTotalQuestions) * 100).toFixed(0) + '%',
-                na: ((grandNa / grandTotalQuestions) * 100).toFixed(0) + '%',
-                empty: ((grandEmpty / grandTotalQuestions) * 100).toFixed(0) + '%'
+                yes: formatPct(grandYes, grandTotalQuestions),
+                partial: formatPct(grandPartial, grandTotalQuestions),
+                no: formatPct(grandNo, grandTotalQuestions),
+                na: formatPct(grandNa, grandTotalQuestions),
+                empty: formatPct(grandEmpty, grandTotalQuestions)
             };
             container.appendChild(createChartRow("Overall", overallStats, true));
         }
