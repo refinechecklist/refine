@@ -500,7 +500,7 @@
         Model pretraining, post-training, and inference-time adaptation strategy
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Describe how the model was developed or adapted for the study task. Indicate whether the study involved training a new foundation model (pretraining from scratch or continued pretraining) or post-training an existing one. For training, summarize the pretraining corpus and objectives. For post-training, specify whether it involved tuning or alignment, and whether model weights were updated. If weights were updated, state the method (e.g., supervised fine-tuning or reinforcement learning) and the technique (e.g., full fine-tuning or parameter-efficient fine-tuning), including key details such as dataset size, steps/epochs, batch size, and optimizer. If no weight updates were performed, describe the inference-time adaptation strategy (e.g., prompting or retrieval-augmented generation), and report any external tools or APIs used at inference. Indicate whether clinical data were included, and clearly specify the stage(s) at which they were used (pretraining, post-training, or inference-time adaptation).</span>
+            <span class="tooltip-text">Describe how the model was developed or adapted for the study task. Indicate whether the study involved training a new foundation model (pretraining from scratch or continued pretraining) or post-training an existing one. For training, summarize the pretraining corpus and objectives. For post-training, specify whether it involved tuning or alignment and whether model weights were updated. If weights were updated, state the method (e.g., supervised fine-tuning or reinforcement learning) and the technique (e.g., full fine-tuning or parameter-efficient fine-tuning), including key details such as dataset size, steps/epochs, batch size, and optimizer. If no weight updates were performed, describe the inference-time adaptation strategy (e.g., prompting or retrieval-augmented generation), and report any external tools or APIs used at inference. Indicate whether clinical data were included, and clearly specify the stage(s) at which they were used (pretraining, post-training, or inference-time adaptation).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -622,7 +622,7 @@
         Prompt engineering protocol with versioning
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Report the protocol used for prompt engineering and the development process (e.g., iterative testing of prompt variants with predefined success metrics, human-in-the-loop review with inter-rater checks, or automated prompt optimization [e.g., DSPy]). Describe contributors involved (e.g., domain experts, or engineers), data partitioning used during prompt development, and any automated tools or optimization frameworks applied. Provide a version history of prompts, summarizing major changes across iterations.</span>
+            <span class="tooltip-text">Report the protocol used for prompt engineering and the development process (e.g., iterative testing of prompt variants with predefined success metrics, human-in-the-loop review with inter-rater checks, or automated prompt optimization [e.g., DSPy]). Describe contributors involved (e.g., domain experts or engineers), data partitioning used during prompt development, and any automated tools or optimization frameworks applied. Provide a version history of prompts, summarizing major changes across iterations.</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -642,7 +642,7 @@
         Prompting strategy, format, and length
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Describe how prompts were constructed and used. Specify the prompting strategy (e.g., zero-shot with task instructions, few-shot using exemplar inputs, or chain-of-thought prompting), the prompt format (e.g., structured templates with placeholders or open-ended queries for text prompts; a single image, a multi-image set, or region annotations/bounding boxes for image prompts), and prompt length (e.g., short directive prompts vs. long multi-context prompts).</span>
+            <span class="tooltip-text">Describe how prompts were constructed and used. Specify the prompting strategy (e.g., zero-shot with task instructions, few-shot using exemplar inputs, or chain-of-thought prompting), the prompt format (e.g., structured templates with placeholders or open-ended queries for text prompts, a single image, a multi-image set, or region annotations/bounding boxes for image prompts), and prompt length (e.g., short directive prompts vs. long multi-context prompts).</span>
         </div>
       </td>
       <td data-label="Reported">
@@ -702,7 +702,7 @@
         Interaction style and session memory policy
         <div class="tooltip">
             <span class="tooltip-icon">?</span>
-            <span class="tooltip-text">Specify how users interacted with the model. Indicate whether the workflow used a single-turn interaction (independent one-shot queries) or a multi-turn conversation in which previous messages influence later responses. Also report the memory policy, whether prior context was retained across messages in the same conversation and reset after closing the session (i.e., session memory policy), or whether prior context was retained across different conversations (i.e., persistent memory policy), to clarify how much conversational history shaped the model’s outputs.</span>
+            <span class="tooltip-text">Specify how users interacted with the model. Indicate whether the workflow used a single-turn interaction (independent one-shot queries) or a multi-turn conversation in which previous messages influence later responses. Also report the memory policy, whether prior context was retained across messages in the same conversation and reset after closing the session (i.e., session memory policy) or whether prior context was retained across different conversations (i.e., persistent memory policy), to clarify how much conversational history shaped the model’s outputs.</span>
         </div>
       </td>
       <td data-label="Reported">
